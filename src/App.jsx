@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import Login from './features/Login/Login';
-import Register from './features/Register/Register';
+import Register from './features/register/Register';
+import CustomerHomePage from './features/CustomerHomePage/CustomerHomePage';
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
   {
     path: 'register',
     element: <Register />
+  },
+  {
+    path: 'customerHomePage',
+    element: <CustomerHomePage />
   }
 ]);
 
