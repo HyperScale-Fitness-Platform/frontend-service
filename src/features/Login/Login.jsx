@@ -28,7 +28,8 @@ export default function Login() {
       const res = await apiGatewayClient.post('/auth/login', data);
 
       if (res.data && res.data.token) {
-        localStorage.setItem('jwt', res.data.token);
+        // Changed key to customerToken
+        localStorage.setItem('customerToken', res.data.token);
       }
 
       toast.success("Login successful! Redirecting...");
@@ -40,16 +41,13 @@ export default function Login() {
     } catch (error) {
       console.error("API Error:", error);
 
-      // 1. Safely extract the error message whether your backend uses { message: "..." } or { error: "..." }
       const backendMessage =
         error.response?.data?.message ||
         error.response?.data?.error ||
         "Invalid email or password";
 
-      // 2. Trigger a global red toast notification (impossible to miss)
       toast.error(backendMessage);
 
-      // 3. Bind the error specifically to the email field so the red text renders under it
       setError("email", { type: "server", message: backendMessage });
     }
   };
