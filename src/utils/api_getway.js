@@ -7,7 +7,7 @@ const apiGatewayClient = axios.create({
 });
 
 apiGatewayClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('jwt'); 
+  const token = localStorage.getItem('customerToken'); 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
