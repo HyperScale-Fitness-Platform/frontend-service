@@ -34,6 +34,8 @@ export default function AdminCreateClass({ onCreated }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.card}>
+      <div className={styles.cardEyebrow}>Catalog</div>
+      <h3 className={styles.cardTitle}>Create a Class</h3>
       <h3 className={styles.cardTitle}>Create a Class</h3>
 
       <div className={styles.field}>

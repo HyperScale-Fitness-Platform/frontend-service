@@ -3,7 +3,8 @@ import Layout from '../components/Layout';
 import Login from '../features/Login/Login';
 import Register from '../features/register/Register';
 import CustomerHomePage from '../features/CustomerHomePage/CustomerHomePage';
-import AdminBooking from '../features/Booking/AdminBooking';
+import AdminBooking from '../features/Admin/Booking/AdminBooking';
+import TranierManagement from '../features/Admin/TrainerManagement/TrainerManagement'
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -13,19 +14,27 @@ export const router = createBrowserRouter([
       {
         path: 'customerHomePage',
         element: (
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <CustomerHomePage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         ),
       },
       {
         path: 'admin',
         element: (
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <AdminBooking />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         ),
       },
+      {
+        path: 'admin/trainer',
+        element: (
+          // <ProtectedRoute>
+            <TranierManagement />
+          // </ProtectedRoute>
+        ),
+      }
     ],
   },
   { path: 'login', element: <Login /> },

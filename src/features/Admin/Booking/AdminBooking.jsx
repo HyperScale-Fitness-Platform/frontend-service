@@ -42,8 +42,9 @@ export default function AdminBooking() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.pageTitle}>Admin / Trainer — Booking Setup</h1>
-
+        <div className={styles.eyebrow}>Studio Management</div>
+        <h1 className={styles.pageTitle}>Booking Setup</h1>
+        <p className={styles.pageSub}>Create classes, schedule sessions, and manage your availability.</p>
         <div className={styles.optionGrid}>
           {OPTIONS.map((opt) => (
             <button
@@ -51,8 +52,9 @@ export default function AdminBooking() {
               className={`${styles.optionCard} ${activePanel === opt.key ? styles.optionCardActive : ''}`}
               onClick={() => setActivePanel(activePanel === opt.key ? null : opt.key)}
             >
-              <span className={styles.optionIcon}>{opt.icon}</span>
-              <span className={styles.optionTitle}>{opt.title}</span>
+              <span className={styles.optionIconBadge}>
+                <span className={styles.optionIcon}>{opt.icon}</span>
+              </span>              <span className={styles.optionTitle}>{opt.title}</span>
               <span className={styles.optionDesc}>{opt.description}</span>
             </button>
           ))}
@@ -64,10 +66,10 @@ export default function AdminBooking() {
               <AdminCreateClass onCreated={loadClasses} />
             )}
             {activePanel === 'sessions' && (
-              <AdminScheduleSession classes={classes} onScheduled={() => {}} />
+              <AdminScheduleSession classes={classes} onScheduled={() => { }} />
             )}
             {activePanel === 'availability' && (
-              <TrainerOpenSlot onOpened={() => {}} />
+              <TrainerOpenSlot onOpened={() => { }} />
             )}
           </div>
         )}

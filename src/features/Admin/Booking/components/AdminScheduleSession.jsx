@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { scheduleSession } from '../bookingApi';
-import DateTimeField from '../../../components/DateTimeField';
+import DateTimeField from '../../../../components/DateTimeField';
 import styles from '../Booking.module.css';
 
 const schema = z.object({
@@ -47,6 +47,8 @@ export default function AdminScheduleSession({ classes, onScheduled }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown} className={styles.card}>
+      <div className={styles.cardEyebrow}>Catalog</div>
+      <h3 className={styles.cardTitle}>Create a Class</h3>
       <h3 className={styles.cardTitle}>Schedule a Class Session</h3>
 
       <fieldset disabled={status === 'submitting'} className={styles.fieldset}>
