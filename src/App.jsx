@@ -6,6 +6,7 @@ import MembershipPlans from "./features/Membership/MembershipPlans";
 import ManageMembership from "./features/Membership/ManageMembership";
 import Occupancy from "./features/Occupancy/Occupancy";
 import PTPackages from "./features/PTPackages/PTPackages";
+import Booking from "./features/Booking/Booking";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/pt-packages",
     element: <PTPackages />
+  },
+  {
+    path: "/booking",
+    element: <Booking />
   }
 ]);
 
