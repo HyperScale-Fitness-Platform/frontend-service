@@ -1,0 +1,83 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  background: #C8C6BC;
+  border-bottom: 1px solid #B8B6AC;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #16171A;
+}
+
+.logoMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #8FBC3F;
+  display: grid;
+  place-items: center;
+  font: 700 16px 'Bebas Neue', sans-serif;
+  color: #16171A;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font: 18px 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.links {
+  display: flex;
+  gap: 28px;
+}
+
+.link {
+  font-size: 14px;
+  font-weight: 600;
+  color: #3D3D3A;
+  text-decoration: none;
+  transition: color .15s;
+}
+
+.link:hover {
+  color: #16171A;
+}
+
+.logoutBtn {
+  padding: 8px 16px;
+  border: 1px solid #B8B6AC;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #16171A;
+}
+
+.logoutBtn:hover {
+  background: #BDBBB1;
+}
+
+.loginLink {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #16171A;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .links { display: none; }
+}

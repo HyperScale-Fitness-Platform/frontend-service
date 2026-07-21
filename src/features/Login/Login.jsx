@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -14,6 +14,7 @@ const loginSchema = z.object({
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -34,8 +35,10 @@ export default function Login() {
 
       toast.success("Login successful! Redirecting...");
 
+      const destination = location.state?.from || '/customerHomePage';
+
       setTimeout(() => {
-        navigate('/customerHomePage');
+        navigate(destination, { replace: true });
       }, 1000);
 
     } catch (error) {

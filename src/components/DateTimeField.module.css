@@ -1,0 +1,99 @@
+.field { margin-bottom: 18px; }
+
+.fieldLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #52545A;
+  margin-bottom: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dateInput {
+  flex: 1.4;
+  padding: 12px 14px;
+  border: 1px solid #DFDED7;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  color: #16171A;
+  background: #FFFFFF;
+}
+
+.select {
+  flex: 0.7;
+  padding: 12px 8px;
+  border: 1px solid #DFDED7;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  color: #16171A;
+  background: #FFFFFF;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%236B6D72'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 24px;
+}
+
+
+.selectAmPm {
+  flex: 0.8;
+  padding: 12px 8px;
+  border: 1px solid #DFDED7;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: #16171A;
+  background: #FFFFFF;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%236B6D72'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 24px;
+}
+
+.dateInput,
+.select,
+.selectAmPm {
+  outline: none;
+}
+
+.select:focus-visible,
+.selectAmPm:focus-visible {
+  outline: none;
+}
+
+.colon {
+  font-weight: 700;
+  color: #6B6D72;
+}
+
+.dateInput:focus, .select:focus, .selectAmPm:focus {
+  outline: none;
+  border-color: #8FBC3F;
+  box-shadow: 0 0 0 3px rgba(143,188,63,0.15);
+}
+
+.errorText {
+  color: #d93025;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
