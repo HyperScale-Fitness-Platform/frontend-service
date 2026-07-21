@@ -2,6 +2,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import Login from './features/Login/Login';
 import Register from './features/register/Register';
 import CustomerHomePage from './features/CustomerHomePage/CustomerHomePage';
+import MembershipPlans from "./features/Membership/MembershipPlans";
+import ManageMembership from "./features/Membership/ManageMembership";
+import Occupancy from "./features/Occupancy/Occupancy";
+import PTPackages from "./features/PTPackages/PTPackages";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +17,25 @@ const router = createBrowserRouter([
     element: <Register />
   },
   {
-    path: 'customerHomePage',
+    path: '/customerHomePage',
     element: <CustomerHomePage />
+  },
+  {
+    path: '/membership',
+    element: <MembershipPlans />
+  },
+
+  {
+    path: "/manage-membership",
+    element: <ManageMembership />
+  },
+  {
+    path: "/occupancy",
+    element: <Occupancy />
+  },
+  {
+    path: "/pt-packages",
+    element: <PTPackages />
   }
 ]);
 
