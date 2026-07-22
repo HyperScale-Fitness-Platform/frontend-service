@@ -205,10 +205,9 @@ export default function CustomerHomePage() {
 
           <button
             className={styles.secondaryButton}
+            onClick={() => navigate("/booking")}
           >
             Booking
-            <br />
-            (Coming Soon)
           </button>
 
 
