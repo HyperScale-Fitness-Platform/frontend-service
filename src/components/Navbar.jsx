@@ -68,14 +68,6 @@ export default function Navbar() {
             Occupancy
           </Link>
 
-
-          <Link 
-            to="/admin/booking" 
-            className={styles.link}
-          >
-            Admin
-          </Link>
-
         </div>
 
       )}
