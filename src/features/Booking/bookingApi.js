@@ -1,9 +1,9 @@
 import apiGatewayClient from "../../utils/api_getway";
 
 
-// =========================
-// Helper
-// =========================
+// Single trainer used across the app for now (matches PTPackages purchase flow)
+const TRAINER_ID = "11b9cb5e-985a-4833-80c2-cac9cf23eaa3";
+
 
 function getCustomerId() {
 
@@ -14,7 +14,6 @@ function getCustomerId() {
         throw new Error("Not logged in");
     }
 
-
     const payload =
         JSON.parse(
             atob(
@@ -22,67 +21,14 @@ function getCustomerId() {
             )
         );
 
-
     return payload.sub;
 
 }
 
 
 
-// =========================
-// Admin / Trainer
-// =========================
-
-
-export function createClass(data) {
-
-    return apiGatewayClient.post(
-        "/operations/classes",
-        data
-    );
-
-}
-
-
-
-export function scheduleSession(classId, data) {
-
-    return apiGatewayClient.post(
-        `/operations/classes/${classId}/sessions`,
-        data
-    );
-
-}
-
-
-
-export function openTrainerSlot(trainerId, data) {
-
-    return apiGatewayClient.post(
-        `/operations/trainers/${trainerId}/slots`,
-        data
-    );
-
-}
-
-
-
-export function getTrainerSchedule(trainerId) {
-
-    return apiGatewayClient.get(
-        `/operations/trainers/${trainerId}/schedule`
-    );
-
-}
-
-
-
-// =========================
-// Customer Browse
-// =========================
-
-
-export async function getClasses() {
+// Get all classes
+export const getAllClasses = async () => {
 
     const response =
         await apiGatewayClient.get(
@@ -91,11 +37,12 @@ export async function getClasses() {
 
     return response.data;
 
-}
+};
 
 
 
-export async function getClassSessions(classId) {
+// Get sessions for a class
+export const getClassSessions = async (classId) => {
 
     const response =
         await apiGatewayClient.get(
@@ -104,66 +51,60 @@ export async function getClassSessions(classId) {
 
     return response.data;
 
-}
+};
 
 
 
-export async function getTrainerSlots(trainerId) {
+// Get the trainer's open slots
+export const getTrainerSlots = async () => {
 
     const response =
         await apiGatewayClient.get(
-            `/operations/trainers/${trainerId}/slots`
+            `/operations/trainers/${TRAINER_ID}/slots`
         );
 
     return response.data;
 
-}
+};
 
 
 
-export async function getAvailableSlotsForPackage(packageId) {
+// Get available slots for a purchased PT package
+export const getPackageAvailableSlots = async (ptPackageId) => {
 
     const response =
         await apiGatewayClient.get(
-            `/operations/pt-packages/${packageId}/available-slots`
+            `/operations/pt-packages/${ptPackageId}/available-slots`
         );
 
     return response.data;
 
-}
+};
 
 
 
-// =========================
-// Customer Bookings
-// =========================
-
-
-export async function getMyBookings() {
+// Get the current customer's bookings
+export const getCustomerBookings = async () => {
 
     const customerId =
         getCustomerId();
-
 
     const response =
         await apiGatewayClient.get(
             `/operations/customers/${customerId}/bookings`
         );
 
-
     return response.data;
 
-}
+};
 
 
 
-
-export async function bookClass(classSessionId) {
-
+// Book a class session
+export const bookClass = async (classSessionId) => {
 
     const customerId =
         getCustomerId();
-
 
     const response =
         await apiGatewayClient.post(
@@ -175,20 +116,17 @@ export async function bookClass(classSessionId) {
             }
         );
 
-
     return response.data;
 
-}
+};
 
 
 
-
-export async function bookPtSessionViaMembership(trainerSlotId) {
-
+// Book a PT session using the membership benefit
+export const bookPtSessionViaMembership = async (trainerSlotId) => {
 
     const customerId =
         getCustomerId();
-
 
     const response =
         await apiGatewayClient.post(
@@ -201,23 +139,17 @@ export async function bookPtSessionViaMembership(trainerSlotId) {
             }
         );
 
-
     return response.data;
 
-}
+};
 
 
 
-
-export async function bookPtSessionViaPackage(
-    trainerSlotId,
-    ptPackageId
-) {
-
+// Book a PT session using a purchased package
+export const bookPtSessionViaPackage = async (trainerSlotId, ptPackageId) => {
 
     const customerId =
         getCustomerId();
-
 
     const response =
         await apiGatewayClient.post(
@@ -231,35 +163,28 @@ export async function bookPtSessionViaPackage(
             }
         );
 
-
     return response.data;
 
-}
+};
 
 
 
-
-export async function cancelBooking(bookingId) {
-
+// Cancel a booking
+export const cancelBooking = async (bookingId) => {
 
     const response =
         await apiGatewayClient.delete(
             `/operations/bookings/${bookingId}`
         );
 
-
     return response.data;
 
-}
+};
 
 
 
-
-export async function rescheduleBooking(
-    bookingId,
-    newTrainerSlotId
-) {
-
+// Reschedule a PT session booking
+export const rescheduleBooking = async (bookingId, newTrainerSlotId) => {
 
     const response =
         await apiGatewayClient.patch(
@@ -269,7 +194,6 @@ export async function rescheduleBooking(
             }
         );
 
-
     return response.data;
 
-}
+};
