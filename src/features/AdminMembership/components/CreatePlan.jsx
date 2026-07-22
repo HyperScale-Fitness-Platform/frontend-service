@@ -5,7 +5,7 @@ import { z } from "zod";
 import toast from "react-hot-toast";
 
 import { createPlan } from "../membershipAdminApi";
-import styles from "../../Booking/Booking.module.css";
+import styles from "../../AdminBooking/Booking.module.css";
 
 const schema = z.object({
     name: z.string().min(1, "Plan name is required"),

@@ -9,7 +9,7 @@ import {
     addBenefit,
 } from "../membershipAdminApi";
 
-import styles from "../../Booking/Booking.module.css";
+import styles from "../../AdminBooking/Booking.module.css";
 
 const schema = z.object({
     planId: z.string().min(1, "Select a plan"),

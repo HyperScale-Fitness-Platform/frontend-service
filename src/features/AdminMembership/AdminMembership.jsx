@@ -4,7 +4,7 @@ import CreatePlan from "./components/CreatePlan";
 import AddBenefit from "./components/AddBenefit";
 
 import { getAdminPlans } from "./membershipAdminApi";
-import styles from "../Booking/Booking.module.css";
+import styles from "../AdminBooking/Booking.module.css";
 
 
 const OPTIONS = [
