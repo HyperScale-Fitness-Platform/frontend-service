@@ -1,0 +1,206 @@
+.page{
+
+    min-height:100vh;
+
+    background:#FAFAF7;
+
+    color:#16171A;
+
+    padding:50px;
+
+    font-family:'Inter',sans-serif;
+
+}
+
+
+
+.container{
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+
+
+.header{
+
+    margin-bottom:40px;
+
+}
+
+
+
+.eyebrow{
+
+    color:#6E9A2F;
+
+    text-transform:uppercase;
+
+    letter-spacing:3px;
+
+    font-size:12px;
+
+}
+
+
+
+.header h1{
+
+    font-family:'Bebas Neue';
+
+    font-size:52px;
+
+    margin:10px 0;
+
+}
+
+
+
+.subtitle{
+
+    color:#6B6D72;
+
+}
+
+
+
+
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+}
+
+
+
+
+
+.card,
+.actionCard{
+
+
+    background:white;
+
+    border:1px solid #E4E3DD;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.04);
+
+}
+
+
+
+.label{
+
+    color:#6B6D72;
+
+    text-transform:uppercase;
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+}
+
+
+
+.number{
+
+    font-family:'Bebas Neue';
+
+    font-size:70px;
+
+    margin:20px 0;
+
+}
+
+
+
+.inside{
+
+    color:#6E9A2F;
+
+}
+
+
+
+.outside{
+
+    color:#6B6D72;
+
+}
+
+
+
+
+
+.actionCard{
+
+    margin-top:25px;
+
+}
+
+
+
+button{
+
+    margin-top:20px;
+
+    background:#16171A;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 25px;
+
+    border-radius:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+
+.back{
+
+    background:white;
+
+    color:#16171A;
+
+    border:1px solid #E4E3DD;
+
+}
+
+
+
+
+
+@media(max-width:700px){
+
+    .page{
+
+        padding:20px;
+
+    }
+
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
