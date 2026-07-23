@@ -1,4 +1,4 @@
-import apiGatewayClient from "../../utils/api_getway";
+import apiGatewayClient from "../../../utils/api_getway";
 
 export async function createPlan(data) {
     return await apiGatewayClient.post(

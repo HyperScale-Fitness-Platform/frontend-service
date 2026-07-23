@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { scheduleSession } from '../bookingApi';
-import DateTimeField from '../../../components/DateTimeField';
+import DateTimeField from '../../../../components/DateTimeField';
 import styles from '../Booking.module.css';
 
 const schema = z.object({

@@ -15,9 +15,11 @@ import Occupancy from '../features/Occupancy/Occupancy';
 import PTPackages from '../features/PTPackages/PTPackages';
 
 import Booking from '../features/Booking/Booking';
-import AdminBooking from '../features/AdminBooking/AdminBooking';
+import AdminBooking from '../features/Admin/AdminBooking/AdminBooking';
 
-import AdminMembership from '../features/AdminMembership/AdminMembership';
+import TrainerManagement from '../features/Admin/TrainerManagement/TrainerManagement'
+
+import AdminMembership from '../features/Admin/AdminMembership/AdminMembership';
 
 import ProtectedRoute from '../components/ProtectedRoute';
 
@@ -99,12 +101,20 @@ export const router = createBrowserRouter([
                 path: 'admin/booking',
 
                 element: (
-                    <ProtectedRoute>
+                    // <ProtectedRoute>
                         <AdminBooking />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
                 ),
             },
+            {
+                path: 'admin',
 
+                element: (
+                    // <ProtectedRoute>
+                        <AdminBooking />
+                    // </ProtectedRoute>
+                ),
+            },
 
             {
                 path: 'admin/membership',
@@ -113,6 +123,15 @@ export const router = createBrowserRouter([
                     <ProtectedRoute>
                         <AdminMembership />
                     </ProtectedRoute>
+                ),
+            },
+              {
+                path: 'admin/trainer',
+
+                element: (
+                    // <ProtectedRoute>
+                        <TrainerManagement />
+                    // </ProtectedRoute>
                 ),
             },
 

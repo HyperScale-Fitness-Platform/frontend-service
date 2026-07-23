@@ -81,3 +81,44 @@
 @media (max-width: 900px) {
   .links { display: none; }
 }
+
+
+.adminTabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #BDBBB1;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.adminTab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #52545A;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+
+.adminTab:hover {
+  color: #16171A;
+}
+
+.adminTabActive {
+  background: #16171A;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .adminTabs {
+    gap: 4px;
+    padding: 3px;
+  }
+  .adminTab {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+}
