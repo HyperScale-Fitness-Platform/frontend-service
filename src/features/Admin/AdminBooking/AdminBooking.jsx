@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { getClasses } from './bookingApi';
 import AdminCreateClass from './components/AdminCreateClass';
 import AdminScheduleSession from './components/AdminScheduleSession';
@@ -27,6 +28,7 @@ const OPTIONS = [
 ];
 
 export default function AdminBooking() {
+  const navigate = useNavigate();
   const [activePanel, setActivePanel] = useState(null);
   const [classes, setClasses] = useState([]);
 
@@ -61,7 +63,12 @@ export default function AdminBooking() {
         {activePanel && (
           <div className={styles.panel}>
             {activePanel === 'classes' && (
-              <AdminCreateClass onCreated={loadClasses} />
+              <>
+                <AdminCreateClass onCreated={loadClasses} />
+                <button onClick={() => navigate('/admin/classes')}>
+                  View All Classes →
+                </button>
+              </>
             )}
             {activePanel === 'sessions' && (
               <AdminScheduleSession classes={classes} onScheduled={() => {}} />

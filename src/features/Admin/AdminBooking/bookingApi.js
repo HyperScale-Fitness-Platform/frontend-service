@@ -79,3 +79,7 @@ export function rescheduleBooking(bookingId, { newClassSessionId, newTrainerSlot
 export function cancelBooking(bookingId) {
   return apiGatewayClient.delete(`/operations/bookings/${bookingId}`);
 }
+
+export function updateClass(classId, data) {
+  return apiGatewayClient.patch(`/operations/classes/${classId}`, data);
+}

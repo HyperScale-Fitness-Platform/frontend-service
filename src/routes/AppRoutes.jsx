@@ -16,6 +16,7 @@ import PTPackages from '../features/PTPackages/PTPackages';
 
 import Booking from '../features/Booking/Booking';
 import AdminBooking from '../features/Admin/AdminBooking/AdminBooking';
+import ClassesPage from '../features/Admin/AdminBooking/ClassesPage';
 
 import TrainerManagement from '../features/Admin/TrainerManagement/TrainerManagement'
 
@@ -102,7 +103,7 @@ export const router = createBrowserRouter([
 
                 element: (
                     // <ProtectedRoute>
-                        <AdminBooking />
+                    <AdminBooking />
                     // </ProtectedRoute>
                 ),
             },
@@ -111,8 +112,16 @@ export const router = createBrowserRouter([
 
                 element: (
                     // <ProtectedRoute>
-                        <AdminBooking />
+                    <AdminBooking />
                     // </ProtectedRoute>
+                ),
+            },
+
+            {
+                path: 'admin/classes',
+
+                element: (
+                    <ClassesPage />
                 ),
             },
 
@@ -125,12 +134,12 @@ export const router = createBrowserRouter([
                     </ProtectedRoute>
                 ),
             },
-              {
+            {
                 path: 'admin/trainer',
 
                 element: (
                     // <ProtectedRoute>
-                        <TrainerManagement />
+                    <TrainerManagement />
                     // </ProtectedRoute>
                 ),
             },
