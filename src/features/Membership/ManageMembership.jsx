@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
@@ -6,9 +6,24 @@ import {
     getCurrentMembership,
     freezeMembership,
     unfreezeMembership,
+    cancelFreeze
 } from "./membershipApi";
 
 import styles from "./ManageMembership.module.css";
+
+function getErrorMessage(error, fallback = "Something went wrong") {
+    const message = error?.response?.data?.message;
+
+    if (Array.isArray(message)) {
+        return message.join(". ");
+    }
+
+    if (typeof message === "string") {
+        return message;
+    }
+
+    return fallback;
+}
 
 
 export default function ManageMembership() {
@@ -17,6 +32,8 @@ export default function ManageMembership() {
 
     const [membership, setMembership] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
 
     useEffect(() => {
@@ -40,8 +57,7 @@ export default function ManageMembership() {
         catch (error) {
 
             toast.error(
-                error.response?.data?.message ||
-                "Unable to load membership"
+                getErrorMessage(error, "Unable to load membership")
             );
 
         }
@@ -54,41 +70,38 @@ export default function ManageMembership() {
     }
 
 
-
     async function handleFreeze() {
+
+        if (!startDate || !endDate) {
+            toast.error("Please select a start and end date");
+            return;
+        }
 
         try {
 
             await freezeMembership(
                 membership.id,
-                5
+                startDate,
+                endDate
+
             );
 
-            toast.success(
-                "Membership frozen successfully"
-            );
+            toast.success("Membership frozen successfully");
+
+            setStartDate("");
+            setEndDate("");
 
             await loadMembership();
 
-        }
-
-        catch (error) {
-
-            console.error(
-                "Freeze error:",
-                error.response?.data
-            );
-
+        } catch (error) {
 
             toast.error(
-                error.response?.data?.message ||
-                "Unable to freeze membership"
+                getErrorMessage(error, "Unable to freeze membership")
             );
 
         }
 
     }
-
 
 
 
@@ -118,12 +131,70 @@ export default function ManageMembership() {
 
 
             toast.error(
-                error.response?.data?.message ||
-                "Unable to unfreeze membership"
+                getErrorMessage(error, "Unable to unfreeze membership")
             );
 
         }
     }
+
+    async function handleCancelFreeze(freezeId) {
+
+        try {
+
+            await cancelFreeze(
+                membership.id,
+                freezeId
+            );
+
+
+            toast.success(
+                "Freeze period cancelled successfully"
+            );
+
+
+            await loadMembership();
+
+
+        } catch (error) {
+
+
+            toast.error(
+                getErrorMessage(
+                    error,
+                    "Unable to cancel freeze"
+                )
+            );
+
+        }
+
+    }
+
+
+
+    const freezeDaysUsed =
+        membership?.freezeDaysUsed ?? 0;
+
+
+    const freezeDaysRemaining =
+        membership?.freezeDaysRemaining ?? 0;
+
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+
+    const futureFreeze =
+        membership?.freezes?.find(freeze => {
+
+            const start =
+                new Date(freeze.startDate);
+
+            start.setHours(0, 0, 0, 0);
+
+
+            return start > today;
+
+        });
 
 
 
@@ -248,14 +319,24 @@ export default function ManageMembership() {
                         <div>
 
                             <label>
-                                Freezes Used
+                                Freeze Days
                             </label>
 
                             <p>
-                                {membership.freezesUsed}
-                                /
-                                {membership.plan.maxFreezes}
+                                {freezeDaysUsed} / {membership.plan.freezeDays}
                             </p>
+
+                            <div>
+
+                                <label>
+                                    Freeze Days Remaining
+                                </label>
+
+                                <p>
+                                    {freezeDaysRemaining}
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -298,46 +379,106 @@ export default function ManageMembership() {
 
 
 
-                    <div className={styles.actions}>
+                    <div className={styles.freezeContainer}>
+
+
+                        {
+                            futureFreeze && (
+
+                                <button
+                                    className={styles.secondary}
+                                    onClick={() =>
+                                        handleCancelFreeze(
+                                            futureFreeze.id
+                                        )
+                                    }
+                                >
+                                    Cancel Scheduled Freeze
+                                </button>
+
+                            )
+                        }
+
 
 
                         {
                             membership.status === "ACTIVE"
 
-                                ?
+                            &&
 
-                                <button
-                                    className={styles.button}
-                                    onClick={handleFreeze}
-                                    disabled={
-                                        membership.freezesUsed >= membership.plan.maxFreezes
-                                    }
-                                >
-                                    {
-                                        membership.freezesUsed >= membership.plan.maxFreezes
-                                            ?
-                                            "No Freezes Remaining"
-                                            :
-                                            "Freeze Membership"
-                                    }
-                                </button>
+                            !futureFreeze
 
+                            &&
 
-                                :
+                            (
+
+                                <>
+
+                                    <input
+                                        type="date"
+                                        value={startDate}
+                                        onChange={
+                                            e => setStartDate(e.target.value)
+                                        }
+                                        className={styles.input}
+                                    />
 
 
-                                <button
-                                    className={styles.button}
-                                    onClick={handleUnfreeze}
-                                >
-                                    Unfreeze Membership
-                                </button>
+                                    <input
+                                        type="date"
+                                        value={endDate}
+                                        onChange={
+                                            e => setEndDate(e.target.value)
+                                        }
+                                        className={styles.input}
+                                    />
+
+
+                                    <button
+                                        className={styles.button}
+                                        onClick={handleFreeze}
+                                        disabled={
+                                            freezeDaysRemaining <= 0
+                                        }
+                                    >
+
+                                        {
+                                            freezeDaysRemaining <= 0
+                                                ?
+                                                "No Freeze Days Remaining"
+                                                :
+                                                "Freeze Membership"
+                                        }
+
+                                    </button>
+
+                                </>
+
+                            )
+
+                        }
+
+
+
+
+                        {
+                            membership.status === "FROZEN"
+
+                            &&
+
+                            <button
+                                className={styles.button}
+                                onClick={handleUnfreeze}
+                            >
+
+                                Unfreeze Membership
+
+                            </button>
 
                         }
 
 
                     </div>
-
 
                 </div>
 

@@ -41,7 +41,7 @@ export const getPlans = async () => {
 // Subscribe to a plan
 // ===============================
 
-export const subscribeToPlan = async(planId) => {
+export const subscribeToPlan = async (planId) => {
 
 
     const response =
@@ -64,9 +64,10 @@ export const subscribeToPlan = async(planId) => {
 // Freeze membership
 // ===============================
 
-export const freezeMembership = async(
+export const freezeMembership = async (
     membershipId,
-    days
+    startDate,
+    endDate
 ) => {
 
 
@@ -74,7 +75,8 @@ export const freezeMembership = async(
         await apiGatewayClient.post(
             `/operations/memberships/${membershipId}/freeze`,
             {
-                days
+                startDate,
+                endDate
             }
         );
 
@@ -90,7 +92,7 @@ export const freezeMembership = async(
 // Unfreeze membership
 // ===============================
 
-export const unfreezeMembership = async(
+export const unfreezeMembership = async (
     membershipId
 ) => {
 
@@ -106,13 +108,27 @@ export const unfreezeMembership = async(
 };
 
 
+export const cancelFreeze = async (
+    membershipId,
+    freezeId
+) => {
+
+    const response =
+        await apiGatewayClient.post(
+            `/operations/memberships/${membershipId}/cancel-freeze/${freezeId}`
+        );
+
+    return response.data;
+
+};
+
 
 
 // ===============================
 // Get available PT package types
 // ===============================
 
-export const getPtPackageTypes = async() => {
+export const getPtPackageTypes = async () => {
 
 
     const response =
@@ -132,7 +148,7 @@ export const getPtPackageTypes = async() => {
 // Purchase PT package
 // ===============================
 
-export const purchasePtPackage = async(data) => {
+export const purchasePtPackage = async (data) => {
 
 
     const response =
@@ -153,7 +169,7 @@ export const purchasePtPackage = async(data) => {
 // Get customer's purchased PT packages
 // ===============================
 
-export const getCustomerPtPackages = async(
+export const getCustomerPtPackages = async (
     customerId
 ) => {
 

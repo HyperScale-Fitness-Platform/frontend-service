@@ -13,7 +13,7 @@ const schema = z.object({
     durationInDays: z.coerce
         .number()
         .positive("Duration must be greater than 0"),
-    maxFreezes: z.coerce
+    freezeDays: z.coerce
         .number()
         .min(0, "Cannot be negative"),
 });
@@ -116,18 +116,18 @@ export default function CreatePlan({ onCreated }) {
 
             <div className={styles.field}>
                 <label className={styles.fieldLabel}>
-                    Maximum Freezes
+                    Maximum Freeze Days
                 </label>
 
                 <input
                     className={styles.input}
                     type="number"
-                    {...register("maxFreezes")}
+                    {...register("freezeDays")}
                 />
 
-                {errors.maxFreezes && (
+                {errors.freezeDays && (
                     <span className={styles.errorText}>
-                        {errors.maxFreezes.message}
+                        {errors.freezeDays.message}
                     </span>
                 )}
             </div>
