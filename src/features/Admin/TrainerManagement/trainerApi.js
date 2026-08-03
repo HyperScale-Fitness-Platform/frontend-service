@@ -1,28 +1,17 @@
-// import axios from 'axios';
+import axios from 'axios';
 
-// const BASE_URL = 'http://localhost:4002/';
-// const TRAINERS_ENDPOINT = `${BASE_URL}api/profiles/trainers`;
+const AUTH_BASE_URL = 'http://localhost:4000/';
+const PROFILE_BASE_URL = 'http://localhost:4002/';
 
-// export const getTrainers = () => axios.get(TRAINERS_ENDPOINT);
+const TRAINERS_ENDPOINT = `${PROFILE_BASE_URL}api/profiles/trainers`;
+const REGISTER_ENDPOINT = `${AUTH_BASE_URL}auth/register`;
 
-// export const createTrainer = (data) => axios.post(TRAINERS_ENDPOINT, data);
+export const getTrainers = () => axios.get(TRAINERS_ENDPOINT);
 
-// export const updateTrainer = (trainerId, data) =>
-//   axios.put(`${TRAINERS_ENDPOINT}/${trainerId}`, data);
+export const createTrainer = (data) => axios.post(REGISTER_ENDPOINT, { ...data, role: "trainer" });
 
-// export const deleteTrainer = (trainerId) =>
-//   axios.delete(`${TRAINERS_ENDPOINT}/${trainerId}`);
+export const updateTrainerProfile = (trainerId, data) => axios.put(`${TRAINERS_ENDPOINT}/${trainerId}`, data);
 
-import apiGatewayClient from "../../../utils/api_getway";
+export const updateTrainerAuth = (trainerId, data) => axios.patch(`${AUTH_BASE_URL}auth/${trainerId}`, data);
 
-const TRAINERS_ENDPOINT = "/people/api/profiles/trainers";
-
-export const getTrainers = () => apiGatewayClient.get(TRAINERS_ENDPOINT);
-
-export const createTrainer = (data) => apiGatewayClient.post(TRAINERS_ENDPOINT, data);
-
-export const updateTrainer = (trainerId, data) =>
-  apiGatewayClient.put(`${TRAINERS_ENDPOINT}/${trainerId}`, data);
-
-export const deleteTrainer = (trainerId) =>
-  apiGatewayClient.delete(`${TRAINERS_ENDPOINT}/${trainerId}`);
+export const deleteTrainer = (trainerId) => axios.delete(`${AUTH_BASE_URL}auth/${trainerId}`);

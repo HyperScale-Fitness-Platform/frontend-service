@@ -3,7 +3,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
-import { getTrainers, createTrainer, updateTrainer, deleteTrainer } from './trainerApi';
+import { 
+  getTrainers, 
+  createTrainer, 
+  updateTrainerProfile, 
+  updateTrainerAuth, 
+  deleteTrainer 
+} from './trainerApi';
 import styles from './TrainerManagement.module.css';
 
 const createSchema = z.object({
@@ -67,7 +73,7 @@ export default function TrainerManagement() {
   const openEditForm = (trainer) => {
     setEditingTrainer(trainer);
     reset({
-      email: trainer.email || '',
+      email: trainer.email || '', 
       password: '',
       full_name: trainer.full_name || '',
       bio: trainer.bio || '',
@@ -84,19 +90,43 @@ export default function TrainerManagement() {
   };
 
   const onSubmit = async (data) => {
-    const payload = { ...data };
-    if (editingTrainer && !payload.password) {
-      delete payload.password;
-    }
-
     try {
       if (editingTrainer) {
         const id = editingTrainer.id ?? editingTrainer.trainer_id;
-        await updateTrainer(id, payload);
-        toast.success('Trainer updated');
+        
+        // 1. Build Auth Payload (only send what changed or exists)
+        const authPayload = {};
+        if (data.email !== editingTrainer.email) {
+          authPayload.email = data.email;
+        }
+        if (data.password) {
+          authPayload.password = data.password;
+        }
+
+        // 2. Build Profile Payload
+        const profilePayload = {
+          full_name: data.full_name,
+          bio: data.bio,
+          gender: data.gender,
+          photo_url: data.photo_url
+        };
+
+        // 3. Execute necessary requests concurrently
+        const requests = [];
+        
+        // Only hit Auth service if email changed or password was typed
+        if (Object.keys(authPayload).length > 0) {
+          requests.push(updateTrainerAuth(id, authPayload));
+        }
+        
+        // Always update profile data
+        requests.push(updateTrainerProfile(id, profilePayload));
+
+        await Promise.all(requests);
+        toast.success('Trainer updated successfully');
       } else {
-        await createTrainer(payload);
-        toast.success('Trainer created');
+        await createTrainer(data);
+        toast.success('Trainer created successfully');
       }
       closeForm();
       loadTrainers();
