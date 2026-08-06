@@ -1,30 +1,22 @@
 import { createBrowserRouter } from 'react-router';
-
 import Layout from '../components/Layout';
-
 import Login from '../features/Login/Login';
 import Register from '../features/register/Register';
-
 import CustomerHomePage from '../features/CustomerHomePage/CustomerHomePage';
-
 import MembershipPlans from '../features/Membership/MembershipPlans';
 import ManageMembership from '../features/Membership/ManageMembership';
-
 import Occupancy from '../features/Occupancy/Occupancy';
-
 import PTPackages from '../features/PTPackages/PTPackages';
-
 import Booking from '../features/Booking/Booking';
 import AdminBooking from '../features/Admin/AdminBooking/AdminBooking';
 import ClassesPage from '../features/Admin/AdminBooking/ClassesPage';
-
 import TrainerManagement from '../features/Admin/TrainerManagement/TrainerManagement'
-
 import AdminMembership from '../features/Admin/AdminMembership/AdminMembership';
-
 import ProtectedRoute from '../components/ProtectedRoute';
 import CustomerManagement from '../features/Admin/CustomerManagement/CustomerManagement';
-
+import AdminOccupancy from '../features/Admin/OccupancyManagement/OccupancyManagement';
+import Community from "../features/Community/Community";
+import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 
 export const router = createBrowserRouter([
 
@@ -76,6 +68,15 @@ export const router = createBrowserRouter([
                 ),
             },
 
+            {
+                path: "community",
+                element: (
+                    <ProtectedRoute>
+                        <Community />
+                    </ProtectedRoute>
+                ),
+            },
+
 
             {
                 path: 'occupancy',
@@ -108,6 +109,7 @@ export const router = createBrowserRouter([
                     // </ProtectedRoute>
                 ),
             },
+
             {
                 path: 'admin',
 
@@ -146,13 +148,30 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'admin/customer',
-
                 element: (
                     // <ProtectedRoute>
                     <CustomerManagement />
                     // </ProtectedRoute>
                 ),
             },
+            {
+
+                path: 'admin/occupancy',
+                element: (
+                    <ProtectedRoute>
+                        <AdminOccupancy />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: "admin/community",
+                element: (
+                    <ProtectedRoute>
+                        <CommunityModeration />
+                    </ProtectedRoute>
+                )
+            },
+
         ],
 
     },
