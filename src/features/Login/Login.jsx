@@ -6,6 +6,7 @@ import * as z from 'zod';
 import toast, { Toaster } from 'react-hot-toast';
 import styles from './Login.module.css';
 import apiGatewayClient from '../../utils/api_getway';
+import { jwtDecode } from 'jwt-decode';
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -31,6 +32,12 @@ export default function Login() {
       if (res.data && res.data.token) {
         // Changed key to customerToken
         localStorage.setItem('customerToken', res.data.token);
+
+        // Decode the JWT to extract the user id (sub claim) so pages can identify the logged-in user
+        const decoded = jwtDecode(res.data.token);
+        if (decoded && decoded.sub) {
+          localStorage.setItem('userId', decoded.sub);
+        }
       }
 
       toast.success("Login successful! Redirecting...");

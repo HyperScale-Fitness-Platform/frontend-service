@@ -152,7 +152,7 @@ export default function CustomerManagement() {
           <p className={styles.cardSub}>Customers cannot self-register. Create their account here.</p>
 
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
-            <div className={styles.photoField}>
+            {/* <div className={styles.photoField}>
               <label htmlFor="photo" className={styles.photoDrop}>
                 {photoPreview ? (
                   <img src={photoPreview} alt="Preview" className={styles.photoPreviewImg} />
@@ -174,7 +174,7 @@ export default function CustomerManagement() {
                 <span className={styles.fieldLabel}>Profile photo (optional)</span>
                 <span className={styles.photoHint}>JPG, PNG or WEBP</span>
               </div>
-            </div>
+            </div> */}
 
             <div className={styles.fieldGrid}>
               <div className={styles.field}>
