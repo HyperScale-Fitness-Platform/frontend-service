@@ -23,6 +23,7 @@ import TrainerManagement from '../features/Admin/TrainerManagement/TrainerManage
 import AdminMembership from '../features/Admin/AdminMembership/AdminMembership';
 
 import ProtectedRoute from '../components/ProtectedRoute';
+import CustomerManagement from '../features/Admin/CustomerManagement/CustomerManagement';
 
 
 export const router = createBrowserRouter([
@@ -143,7 +144,15 @@ export const router = createBrowserRouter([
                     // </ProtectedRoute>
                 ),
             },
+            {
+                path: 'admin/customer',
 
+                element: (
+                    // <ProtectedRoute>
+                    <CustomerManagement />
+                    // </ProtectedRoute>
+                ),
+            },
         ],
 
     },

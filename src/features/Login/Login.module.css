@@ -60,38 +60,7 @@
 
 .brandSub { font-size: 15px; line-height: 1.6; color: #52545A; margin: 0; }
 
-/* Signature: live occupancy card */
-.occupancyCard {
-  margin-top: 40px; max-width: 360px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 22px 24px;
-  box-shadow: 0 2px 8px rgba(20,20,15,0.04);
-}
 
-.occupancyHead { display: flex; justify-content: space-between; margin-bottom: 14px; }
-
-.liveDot {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--accent-dark); letter-spacing: 1px; text-transform: uppercase;
-}
-.liveDot::before {
-  content: ''; width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent-dark);
-  animation: pulse 1.8s infinite;
-}
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(110,154,47,0.45); }
-  70%  { box-shadow: 0 0 0 8px rgba(110,154,47,0); }
-  100% { box-shadow: 0 0 0 0 rgba(110,154,47,0); }
-}
-
-.occupancyCount { display: flex; align-items: baseline; gap: 8px; font: 44px var(--display); }
-.occupancyCount small { font: 500 13px 'Inter', sans-serif; color: var(--muted); }
-
-.occupancyBar { margin-top: 14px; height: 6px; border-radius: 4px; background: #EEEDE7; overflow: hidden; }
-.occupancyBarFill { height: 100%; width: 62%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-dark)); }
 
 .brandFoot { display: flex; gap: 32px; color: var(--muted); font-size: 12px; }
 .brandFoot strong { display: block; color: var(--text); font: 20px var(--display); }
@@ -164,4 +133,161 @@
   font-size: 12px;
   margin-top: 4px;
   display: block;
+}
+
+
+/* --- Register page enhancements --- */
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  margin: 28px 0 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.sectionLabel:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 8px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .fieldGrid { grid-template-columns: 1fr; }
+}
+
+/* Photo uploader */
+.photoField {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.photoDrop {
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 1.5px dashed #C8C6BC;
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color .15s, background .15s;
+}
+.photoDrop:hover {
+  border-color: var(--accent);
+  background: #F7F6F1;
+}
+
+.photoPreviewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.photoPlusIcon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--accent-dark);
+}
+
+.photoInputHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.photoFieldMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.photoHint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Password field */
+.passwordWrap {
+  position: relative;
+}
+.passwordWrap .input {
+  padding-right: 56px;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 6px;
+  /* top: 50%; */
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  cursor: pointer;
+  padding: 6px 8px;
+}
+.passwordToggle:hover { text-decoration: underline; }
+
+.strengthWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.strengthBar {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.strengthSeg {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  transition: background .2s;
+}
+
+.strengthLabel {
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Bio char count */
+.bioLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.charCount {
+  font-size: 11px;
+  color: var(--muted);
 }

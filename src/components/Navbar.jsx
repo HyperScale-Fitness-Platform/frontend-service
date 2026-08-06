@@ -12,6 +12,7 @@ const CUSTOMER_TABS = [
 const ADMIN_TABS = [
   { to: '/admin', label: 'Booking' },
   { to: '/admin/trainer', label: 'Trainer Management' },
+  { to: '/admin/customer', label: 'Customer Management' },
 ];
 
 export default function Navbar() {
