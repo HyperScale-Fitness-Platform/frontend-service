@@ -7,6 +7,7 @@ const CUSTOMER_TABS = [
   { to: '/booking', label: 'Booking' },
   { to: '/membership', label: 'Membership' },
   { to: '/occupancy', label: 'Occupancy' },
+  { to: '/community', label: 'Community' }
 ];
 
 const ADMIN_TABS = [
