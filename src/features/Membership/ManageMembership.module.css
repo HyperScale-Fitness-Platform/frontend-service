@@ -1,0 +1,314 @@
+.page {
+
+    min-height:100vh;
+
+    background:#FAFAF7;
+
+    color:#16171A;
+
+    font-family:'Inter',sans-serif;
+
+    padding:50px;
+
+}
+
+
+
+.container{
+
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+
+
+.header{
+
+    margin-bottom:40px;
+
+}
+
+
+.eyebrow{
+
+    color:#6E9A2F;
+
+    text-transform:uppercase;
+
+    letter-spacing:3px;
+
+    font-size:12px;
+
+}
+
+
+.header h1{
+
+    font-family:'Bebas Neue',sans-serif;
+
+    font-size:52px;
+
+    margin:10px 0;
+
+}
+
+
+
+.subtitle{
+
+    color:#6B6D72;
+
+}
+
+
+
+
+
+.card,
+.emptyCard{
+
+
+    background:white;
+
+    border:1px solid #E4E3DD;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.04);
+
+}
+
+
+
+
+
+.top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+.top h2{
+
+    font-size:32px;
+
+    margin:0;
+
+}
+
+
+
+.top p{
+
+    color:#6B6D72;
+
+}
+
+
+
+
+
+.active,
+.frozen{
+
+
+    padding:8px 18px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+
+
+.active{
+
+    background:#e8f5d0;
+
+    color:#6E9A2F;
+
+}
+
+
+.frozen{
+
+    background:#fff1d6;
+
+    color:#b06b00;
+
+}
+
+
+
+
+
+.info{
+
+    display:flex;
+
+    gap:50px;
+
+    margin-top:30px;
+
+}
+
+
+
+.info label{
+
+    color:#6B6D72;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+}
+
+
+
+.info p{
+
+    font-weight:600;
+
+}
+
+
+
+
+
+.actions button,
+.navigation button,
+.emptyCard button{
+
+
+    background:#16171A;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:14px 25px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+}
+
+
+
+.actions{
+
+    margin-top:30px;
+
+}
+
+
+
+
+
+.benefits{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+}
+
+
+
+.benefit{
+
+    background:#F1F0EA;
+
+    padding:15px;
+
+    border-radius:12px;
+
+}
+
+
+
+
+
+.navigation{
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+
+
+.secondary{
+
+    background:white !important;
+
+    color:#16171A !important;
+
+    border:1px solid #E4E3DD !important;
+
+}
+
+
+
+.emptyCard{
+
+    text-align:center;
+
+}
+
+
+
+@media(max-width:700px){
+
+
+.page{
+
+    padding:20px;
+
+}
+
+
+.info{
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+
+.benefits{
+
+    grid-template-columns:1fr;
+
+}
+
+.navigation{
+
+    flex-direction:column;
+
+}
+
+}

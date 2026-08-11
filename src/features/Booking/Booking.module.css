@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+
+.page {
+
+    --bg:#FAFAF7;
+    --panel:#F1F0EA;
+    --card:#FFFFFF;
+    --border:#E4E3DD;
+    --text:#16171A;
+    --muted:#6B6D72;
+    --accent:#8FBC3F;
+    --accent-dark:#6E9A2F;
+
+
+    min-height:100vh;
+
+    background:var(--bg);
+
+    padding:50px;
+
+    font-family:'Inter', sans-serif;
+
+    color:var(--text);
+
+}
+
+
+/* Header */
+
+.header {
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+}
+
+
+.eyebrow {
+
+    letter-spacing:3px;
+
+    text-transform:uppercase;
+
+    font-size:12px;
+
+    color:var(--accent-dark);
+
+}
+
+
+.page h1 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:60px;
+
+    margin:10px 0;
+
+}
+
+
+.subtitle {
+
+    color:var(--muted);
+
+    font-size:16px;
+
+}
+
+
+
+/* Sections */
+
+.page section {
+
+    margin-top:45px;
+
+}
+
+
+.page section h2 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:38px;
+
+    margin-bottom:20px;
+
+}
+
+
+.notice {
+
+    color:var(--accent-dark);
+
+    font-weight:600;
+
+    margin-bottom:20px;
+
+}
+
+
+
+/* Cards grid */
+
+.grid {
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+    gap:25px;
+
+}
+
+
+.card,
+.emptyCard {
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:
+    0 2px 8px rgba(20,20,15,.04);
+
+    transition:.2s;
+
+}
+
+
+.card:hover {
+
+    transform:translateY(-5px);
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+.card h3 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:28px;
+
+    margin:0 0 8px;
+
+}
+
+
+.card p {
+
+    color:var(--muted);
+
+    line-height:1.6;
+
+}
+
+
+
+/* Status badge */
+
+.status {
+
+    display:inline-block;
+
+    margin-bottom:10px;
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    background:#eaf6d6;
+
+    color:var(--accent-dark);
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+
+
+/* Buttons */
+
+.card button {
+
+    padding:12px 18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--text);
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.card button:hover:not(:disabled) {
+
+    background:#2d2e33;
+
+}
+
+
+.card button:disabled {
+
+    background:#D8D8D2;
+
+    color:#777;
+
+    cursor:not-allowed;
+
+}
+
+
+.actions {
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin-top:15px;
+
+}
+
+
+
+/* Class sessions list */
+
+.sessionsList {
+
+    margin-top:15px;
+
+    border-top:1px solid var(--border);
+
+    padding-top:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+
+.sessionRow {
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+}
+
+
+.sessionRow button {
+
+    padding:8px 16px;
+
+}
+
+
+
+/* Reschedule box */
+
+.rescheduleBox {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+.rescheduleBox select {
+
+    padding:10px;
+
+    border-radius:8px;
+
+    border:1px solid var(--border);
+
+}
+
+
+
+/* Empty state */
+
+.emptyCard {
+
+    text-align:center;
+
+    color:var(--muted);
+
+}
+
+
+.emptyCard p {
+
+    margin:0;
+
+}
+
+
+.loading {
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+}
+
+
+
+.navigation {
+
+    margin-top:50px;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+
+.backButton {
+
+    padding:14px 30px;
+
+    border-radius:10px;
+
+    border:1px solid var(--border);
+
+    background:var(--panel);
+
+    color:var(--text);
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+.backButton:hover {
+
+    background:#e8e6df;
+
+}
+
+
+
+/* Responsive */
+
+@media(max-width:800px) {
+
+    .page {
+
+        padding:25px;
+
+    }
+
+    .page h1 {
+
+        font-size:45px;
+
+    }
+
+}
