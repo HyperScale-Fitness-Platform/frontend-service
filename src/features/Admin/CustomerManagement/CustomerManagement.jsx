@@ -5,11 +5,6 @@ import * as z from 'zod';
 import toast, { Toaster } from 'react-hot-toast';
 import styles from './CustomerManagement.module.css';
 import apiGatewayClient from '../../../utils/api_getway';
-import axios from 'axios';
-
-// Hardcoded service URLs
-const PROFILE_SERVICE_URL = 'http://localhost:4002';
-const AUTH_SERVICE_URL = 'http://localhost:4000';
 
 const customerSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -44,12 +39,7 @@ export default function CustomerManagement() {
   const fetchCustomers = async () => {
     setIsLoadingList(true);
     try {
-      const url = `${PROFILE_SERVICE_URL}/api/profiles/customers`;
-      const response = await axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('customerToken')}` 
-        }
-      });
+      const response = await apiGatewayClient.get('/api/profiles/customers');
       
       setCustomers(response.data);
     } catch (error) {
@@ -119,11 +109,7 @@ export default function CustomerManagement() {
     }
 
     try {
-      await axios.delete(`${AUTH_SERVICE_URL}/auth/${customerId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('customerToken')}`
-        }
-      });
+      await apiGatewayClient.delete(`/auth/${customerId}`);
       
       toast.success("Customer deleted successfully.");
       fetchCustomers(); // Refresh the list from the server

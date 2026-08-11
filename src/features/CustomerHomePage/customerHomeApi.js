@@ -1,7 +1,4 @@
 import apiGatewayClient from "../../utils/api_getway";
-import axios from "axios";
-
-const AUTH_SERVICE_URL = "http://localhost:4000/auth";
 
 export const getCurrentMembership = async () => {
   const response = await apiGatewayClient.get(
@@ -11,12 +8,12 @@ export const getCurrentMembership = async () => {
 };
 
 export const getUserStatus = async (userId) => {
-  const response = await axios.get(`${AUTH_SERVICE_URL}/${userId}/status`);
+  const response = await apiGatewayClient.get(`/auth/${userId}/status`);
   return response.data;
 };
 
 export const activateUser = async (userId, oldPassword, newPassword) => {
-  const response = await axios.patch(`${AUTH_SERVICE_URL}/${userId}`, {
+  const response = await apiGatewayClient.patch(`/auth/${userId}`, {
     is_active: true,
     old_password: oldPassword,
     new_password: newPassword
