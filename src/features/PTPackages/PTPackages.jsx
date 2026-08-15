@@ -11,74 +11,79 @@ import toast from "react-hot-toast";
 import {
     getPtPackageTypes,
     purchasePtPackage,
-    getCustomerPackages
+    getCustomerPackages,
+    getAvailableTrainers
 }
-from "./ptPackagesApi";
+    from "./ptPackagesApi";
 
 
 import styles from "./PTPackages.module.css";
 
 
 
-export default function PTPackages(){
+export default function PTPackages() {
 
 
     const navigate = useNavigate();
-
-
-    const [packages,setPackages] = useState([]);
-
-    const [myPackages,setMyPackages] = useState([]);
-
-    const [loading,setLoading] = useState(true);
+    const [packages, setPackages] = useState([]);
+    const [myPackages, setMyPackages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [trainers, setTrainers] = useState([]);
+    const [selectedTrainer, setSelectedTrainer] = useState(null);
 
 
 
-    useEffect(()=>{
+    useEffect(() => {
 
         loadData();
 
-    },[]);
+    }, []);
 
 
 
 
-    async function loadData(){
+    async function loadData() {
 
-        try{
-
+        try {
 
             const available =
                 await getPtPackageTypes();
 
-
             setPackages(available);
 
+
+            const availableTrainers =
+                await getAvailableTrainers();
+
+            setTrainers(
+                Array.isArray(availableTrainers)
+                    ? availableTrainers
+                    : []
+            );
 
 
             const customerPackages =
                 await getCustomerPackages();
 
-
             setMyPackages(customerPackages);
 
-
-
         }
-        catch(error){
+        catch (error) {
 
+            console.error(
+                "PT PACKAGES LOAD ERROR:",
+                error
+            );
 
             toast.error(
+                error.response?.data?.message ||
                 "Unable to load PT packages"
             );
 
-
         }
-        finally{
-
+        finally {
 
             setLoading(false);
-
 
         }
 
@@ -87,36 +92,41 @@ export default function PTPackages(){
 
 
 
+    async function purchase(type) {
 
-    async function purchase(type){
+        if (!selectedTrainer) {
 
+            toast.error(
+                "Please select a trainer first"
+            );
 
-        try{
+            return;
 
+        }
 
-            await purchasePtPackage(type);
+        try {
 
-
+            await purchasePtPackage(
+                selectedTrainer.id,
+                type
+            );
 
             toast.success(
                 "PT Package purchased successfully"
             );
 
+            setSelectedTrainer(null);
 
             loadData();
 
-
-
         }
-        catch(error){
-
+        catch (error) {
 
             toast.error(
                 error.response?.data?.message ||
                 "Purchase failed"
             );
 
-
         }
 
     }
@@ -125,7 +135,7 @@ export default function PTPackages(){
 
 
 
-    if(loading)
+    if (loading)
 
         return (
 
@@ -188,122 +198,132 @@ export default function PTPackages(){
                     myPackages.length === 0
 
 
-                    ?
+                        ?
 
 
-                    <div className={styles.emptyCard}>
+                        <div className={styles.emptyCard}>
 
 
-                        <h3>
-                            No PT Package
-                        </h3>
+                            <h3>
+                                No PT Package
+                            </h3>
 
 
-                        <p>
-                            Purchase a package to start
-                            your personal training sessions.
-                        </p>
+                            <p>
+                                Purchase a package to start
+                                your personal training sessions.
+                            </p>
 
 
-                    </div>
+                        </div>
 
 
-                    :
-
-
-
-                    <div className={styles.grid}>
-
-
-                        {
-
-                            myPackages.map(pkg=>(
-
-
-                                <div
-                                    key={pkg.id}
-                                    className={styles.card}
-                                >
+                        :
 
 
 
-                                    <div className={styles.sessions}>
+                        <div className={styles.grid}>
 
-                                        {pkg.packageType}
 
-                                        <span>
-                                            Sessions
+                            {
+
+                                myPackages.map(pkg => (
+
+
+                                    <div
+                                        key={pkg.id}
+                                        className={styles.card}
+                                    >
+
+
+
+                                        <div className={styles.sessions}>
+
+                                            {pkg.packageType}
+
+                                            <span>
+                                                Sessions
+                                            </span>
+
+
+                                        </div>
+
+
+
+
+                                        <p>
+
+                                            Remaining:
+
+                                            {
+
+                                                pkg.sessionsTotal -
+                                                pkg.sessionsUsed
+
+                                            }
+
+                                        </p>
+
+
+
+
+
+                                        <p>
+
+                                            Used:
+
+                                            {pkg.sessionsUsed}
+
+                                            /
+
+                                            {pkg.sessionsTotal}
+
+
+                                        </p>
+
+
+
+
+
+                                        <span className={styles.status}>
+
+                                            {pkg.status}
+
                                         </span>
+
+                                        <button
+                                            onClick={() =>
+                                                navigate(`/chat/${pkg.trainerId}`)
+                                            }
+                                        >
+                                            Chat with Trainer
+                                        </button>
+
+
+                                        <button
+                                            onClick={() =>
+                                                navigate("/booking", {
+                                                    state: {
+                                                        selectedSourceType: "package",
+                                                        selectedSourceId: pkg.id
+                                                    }
+                                                })
+                                            }
+                                        >
+                                            Book Session
+                                        </button>
+
 
 
                                     </div>
 
 
+                                ))
+
+                            }
 
 
-                                    <p>
-
-                                        Remaining:
-
-                                        {
-
-                                            pkg.sessionsTotal -
-                                            pkg.sessionsUsed
-
-                                        }
-
-                                    </p>
-
-
-
-
-
-                                    <p>
-
-                                        Used:
-
-                                        {pkg.sessionsUsed}
-
-                                        /
-
-                                        {pkg.sessionsTotal}
-
-
-                                    </p>
-
-
-
-
-
-                                    <span className={styles.status}>
-
-                                        {pkg.status}
-
-                                    </span>
-
-
-
-
-
-                                    <button disabled>
-
-                                        Book Session
-                                        <br/>
-                                        (Coming Soon)
-
-                                    </button>
-
-
-
-                                </div>
-
-
-                            ))
-
-                        }
-
-
-                    </div>
+                        </div>
 
 
                 }
@@ -323,86 +343,203 @@ export default function PTPackages(){
 
             <section>
 
-
                 <h2>
-                    Available Packages
+                    {selectedTrainer
+                        ? "Choose Your Package"
+                        : "Choose Your Trainer"
+                    }
                 </h2>
 
 
+                {/* ==========================================
+                     STEP 1: SHOW TRAINERS
+                    ========================================== */}
 
-                <div className={styles.grid}>
+                {!selectedTrainer && (
+
+                    <div className={styles.grid}>
+
+                        {
+                            trainers.map(trainer => (
+
+                                <div
+                                    key={trainer.id}
+                                    className={styles.card}
+                                >
+
+                                    {/* Trainer photo */}
+
+                                    {
+                                        trainer.photoUrl && (
+
+                                            <img
+                                                src={trainer.photoUrl}
+                                                alt={trainer.fullName}
+                                                className={styles.trainerPhoto}
+                                            />
+
+                                        )
+                                    }
 
 
-                    {
+                                    {/* Trainer name */}
 
-                        packages.map(pkg=>(
-
-
-
-                            <div
-
-                                key={pkg.type}
-
-                                className={styles.card}
-
-                            >
+                                    <h3>
+                                        {trainer.fullName}
+                                    </h3>
 
 
+                                    {/* Trainer bio */}
 
-                                <div className={styles.sessions}>
+                                    {
+                                        trainer.bio && (
 
-                                    {pkg.sessions}
+                                            <p>
+                                                {trainer.bio}
+                                            </p>
 
-                                    <span>
-                                        Sessions
-                                    </span>
+                                        )
+                                    }
 
+
+                                    {/* Trainer gender */}
+
+                                    {
+                                        trainer.gender && (
+
+                                            <p>
+                                                Gender: {trainer.gender}
+                                            </p>
+
+                                        )
+                                    }
+
+
+                                    {/* Select trainer */}
+
+                                    <button
+                                        onClick={() =>
+                                            setSelectedTrainer(trainer)
+                                        }
+                                    >
+                                        Choose Trainer
+                                    </button>
 
                                 </div>
 
+                            ))
+                        }
+
+                    </div>
+
+                )}
 
 
+                {/* ==========================================
+                    STEP 2: TRAINER SELECTED
+                    SHOW PACKAGE TYPES
+                    ========================================== */}
+
+                {
+                    selectedTrainer && (
+
+                        <div>
+
+                            {/* Back to trainers */}
+
+                            <button
+                                className={styles.backButton}
+                                onClick={() =>
+                                    setSelectedTrainer(null)
+                                }
+                            >
+                                ← Choose another trainer
+                            </button>
 
 
-                                <p>
+                            {/* Selected trainer */}
 
-                                    Personal training sessions
-                                    with your trainer.
+                            <div className={styles.card}>
 
-                                </p>
+                                {
+                                    selectedTrainer.photoUrl && (
 
+                                        <img
+                                            src={selectedTrainer.photoUrl}
+                                            alt={selectedTrainer.fullName}
+                                            className={styles.trainerPhoto}
+                                        />
 
-
-
-
-                                <button
-
-                                    onClick={() =>
-                                        purchase(pkg.type)
-                                    }
-
-                                >
-
-                                    Purchase
-
-                                </button>
+                                    )
+                                }
 
 
+                                <h3>
+                                    {selectedTrainer.fullName}
+                                </h3>
 
+
+                                {
+                                    selectedTrainer.bio && (
+
+                                        <p>
+                                            {selectedTrainer.bio}
+                                        </p>
+
+                                    )
+                                }
 
                             </div>
 
 
+                            {/* Package types */}
 
-                        ))
+                            <div className={styles.grid}>
+
+                                {
+                                    packages.map(pkg => (
+
+                                        <div
+                                            key={pkg.type}
+                                            className={styles.card}
+                                        >
+
+                                            <div className={styles.sessions}>
+
+                                                {pkg.sessions}
+
+                                                <span>
+                                                    Sessions
+                                                </span>
+
+                                            </div>
 
 
-                    }
+                                            <p>
+                                                Personal training sessions
+                                                with {selectedTrainer.fullName}.
+                                            </p>
 
 
-                </div>
+                                            <button
+                                                onClick={() =>
+                                                    purchase(pkg.type)
+                                                }
+                                            >
+                                                Purchase
+                                            </button>
 
+                                        </div>
 
+                                    ))
+                                }
+
+                            </div>
+
+                        </div>
+
+                    )
+                }
 
             </section>
 

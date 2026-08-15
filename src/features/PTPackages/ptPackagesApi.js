@@ -13,24 +13,32 @@ export const getPtPackageTypes = async () => {
 
 };
 
+export const getAvailableTrainers = async () => {
+
+    const response =
+        await apiGatewayClient.get(
+            "/operations/trainers/available"
+        );
+
+    return response.data;
+};
+
+
 
 
 // Purchase PT package
-export const purchasePtPackage = async (packageType) => {
+export const purchasePtPackage = async (trainerId, packageType) => {
 
     const response =
         await apiGatewayClient.post(
             "/operations/pt-packages/purchase",
             {
-                trainerId:
-                "11b9cb5e-985a-4833-80c2-cac9cf23eaa3",
-
+                trainerId,
                 packageType
             }
         );
 
     return response.data;
-
 };
 
 
