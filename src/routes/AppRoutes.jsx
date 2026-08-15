@@ -17,7 +17,8 @@ import CustomerManagement from '../features/Admin/CustomerManagement/CustomerMan
 import AdminOccupancy from '../features/Admin/OccupancyManagement/OccupancyManagement';
 import Community from "../features/Community/Community";
 import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
-
+import Chat from "../features/Chat/Chat";
+import TrainerChats from "../features/Chat/TrainerChats";
 export const router = createBrowserRouter([
 
     {
@@ -73,6 +74,24 @@ export const router = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Community />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: 'chat/:otherUserId',
+
+                element: (
+                    <ProtectedRoute>
+                        <Chat />
+                    </ProtectedRoute>
+                ),
+            },
+            {
+                path: 'trainer/chats',
+
+                element: (
+                    <ProtectedRoute>
+                        <TrainerChats />
                     </ProtectedRoute>
                 ),
             },
