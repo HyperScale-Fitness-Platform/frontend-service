@@ -184,7 +184,7 @@ export default function MembershipPlans() {
                             your membership.
                         </p>
 
-                        <Elements stripe={stripePromise}>
+                        <Elements stripe={stripePromise} options={{ clientSecret }}>
 
                             <CheckoutForm
                                 clientSecret={clientSecret}

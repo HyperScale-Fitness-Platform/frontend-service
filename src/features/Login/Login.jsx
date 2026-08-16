@@ -53,6 +53,8 @@ export default function Login() {
 
       if (isAdmin) {
         destination = from && from.startsWith('/admin') ? from : '/admin';
+      } else if (role === 'trainer') {
+        destination = from && from.startsWith('/trainer') ? from : '/trainer/chats';
       } else {
         destination = from || '/customerHomePage';
       }

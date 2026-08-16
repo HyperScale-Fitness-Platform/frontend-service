@@ -271,6 +271,14 @@
     font-size: 14px;
 }
 
+.authorRole {
+    font-weight: 400;
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
 .date {
     display: block;
 

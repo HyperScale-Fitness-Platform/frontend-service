@@ -32,26 +32,28 @@ export default function CheckoutForm({ clientSecret, onSuccess }){
 
         try{
 
-
             const {
                 error,
                 paymentIntent
             } =
-            await stripe.confirmPayment({
+            await elements.submit()
+                .then(() =>
+                    stripe.confirmPayment({
 
-                elements,
+                        elements,
 
-                clientSecret,
+                        clientSecret,
 
-                confirmParams: {
+                        confirmParams: {
 
-                    return_url: window.location.href,
+                            return_url: window.location.href,
 
-                },
+                        },
 
-                redirect: "if_required",
+                        redirect: "if_required",
 
-            });
+                    })
+                );
 
 
             if(error){

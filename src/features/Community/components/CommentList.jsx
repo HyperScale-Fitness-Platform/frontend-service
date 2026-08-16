@@ -179,6 +179,15 @@ export default function CommentList({
 
                             <strong className={styles.authorName}>
                                 {comment.full_name || "Gym Member"}
+                                {comment.role && (
+                                    <span className={styles.authorRole}>
+                                        {" "}
+                                        (
+                                        {comment.role.charAt(0).toUpperCase() +
+                                            comment.role.slice(1)}
+                                        )
+                                    </span>
+                                )}
                             </strong>
 
                             <span className={styles.date}>

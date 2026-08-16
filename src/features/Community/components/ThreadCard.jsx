@@ -166,6 +166,15 @@ export default function ThreadCard({
 
                     <strong className={styles.authorName}>
                         {thread.full_name || "Gym Member"}
+                        {thread.role && (
+                            <span className={styles.authorRole}>
+                                {" "}
+                                (
+                                {thread.role.charAt(0).toUpperCase() +
+                                    thread.role.slice(1)}
+                                )
+                            </span>
+                        )}
                     </strong>
 
                     <span className={styles.date}>

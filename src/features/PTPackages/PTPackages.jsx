@@ -1082,7 +1082,7 @@ export default function PTPackages(){
                         </p>
 
 
-                        <Elements stripe={stripePromise}>
+                        <Elements stripe={stripePromise} options={{ clientSecret }}>
 
                             <CheckoutForm
                                 clientSecret={clientSecret}

@@ -25,11 +25,36 @@ export default function Chat() {
 
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [socketConnected, setSocketConnected] = useState(socket.connected);
 
 
     useEffect(() => {
 
         connectSocket();
+
+        function handleConnect() {
+
+            setSocketConnected(true);
+
+        }
+
+        function handleDisconnect() {
+
+            setSocketConnected(false);
+
+        }
+
+        socket.on("connect", handleConnect);
+
+        socket.on("disconnect", handleDisconnect);
+
+        return () => {
+
+            socket.off("connect", handleConnect);
+
+            socket.off("disconnect", handleDisconnect);
+
+        };
 
     }, []);
 
@@ -287,7 +312,7 @@ export default function Chat() {
 
                 <MessageInput
                     onSend={sendMessage}
-                    disabled={!socket.connected}
+                    disabled={!socketConnected}
                 />
 
             </div>
