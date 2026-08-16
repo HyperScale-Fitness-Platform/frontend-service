@@ -1,0 +1,394 @@
+.page {
+
+    max-width:1000px;
+
+    margin:0 auto;
+
+    padding:40px 24px;
+
+    --bg:#FAFAF7;
+
+    --panel:#F1F0EA;
+
+    --card:#FFFFFF;
+
+    --border:#E4E3DD;
+
+    --text:#16171A;
+
+    --muted:#6B6D72;
+
+    --accent:#8FBC3F;
+
+    --accent-dark:#6E9A2F;
+
+    background:var(--bg);
+
+    min-height:100vh;
+
+}
+
+
+.header {
+
+    margin-bottom:30px;
+
+}
+
+
+.eyebrow {
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    font-size:13px;
+
+    color:var(--accent-dark);
+
+    margin-bottom:8px;
+
+}
+
+
+.header h1 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:48px;
+
+    margin:0 0 6px;
+
+    color:var(--text);
+
+}
+
+
+.subtitle {
+
+    color:var(--muted);
+
+    margin:0;
+
+}
+
+
+.page section h2 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:30px;
+
+    margin:30px 0 18px;
+
+    color:var(--text);
+
+}
+
+
+.list {
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:16px;
+
+}
+
+
+.card {
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:24px 28px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    box-shadow:
+
+    0 2px 8px rgba(20,20,15,.04);
+
+}
+
+
+.status {
+
+    display:inline-block;
+
+    margin-bottom:8px;
+
+    padding:4px 12px;
+
+    border-radius:20px;
+
+    background:#eaf6d6;
+
+    color:var(--accent-dark);
+
+    font-weight:700;
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+}
+
+
+.muted {
+
+    color:var(--muted);
+
+    margin:2px 0;
+
+    text-transform:capitalize;
+
+}
+
+
+.amount {
+
+    font-size:22px;
+
+    font-weight:800;
+
+    color:var(--text);
+
+    margin:6px 0 0;
+
+}
+
+
+.actions {
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+
+.primaryButton {
+
+    padding:12px 22px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--accent);
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.primaryButton:hover:not(:disabled) {
+
+    background:var(--accent-dark);
+
+}
+
+
+.primaryButton:disabled {
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+
+.deleteButton {
+
+    padding:12px 22px;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    background:transparent;
+
+    color:#B0413E;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.deleteButton:hover {
+
+    background:#FBE9E7;
+
+}
+
+
+.emptyCard {
+
+    background:var(--card);
+
+    border:1px dashed var(--border);
+
+    border-radius:18px;
+
+    padding:40px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+}
+
+
+.emptyCard h3 {
+
+    color:var(--text);
+
+    margin:0 0 6px;
+
+}
+
+
+.formCard {
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    max-width:520px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+
+    0 2px 8px rgba(20,20,15,.04);
+
+}
+
+
+.formCard h3 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:30px;
+
+    margin:0 0 5px;
+
+    color:var(--text);
+
+}
+
+
+.totalRow {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 16px;
+
+    margin:12px 0 16px;
+
+    border-radius:12px;
+
+    background:var(--panel, #F1F0EA);
+
+    border:1px solid var(--border);
+
+}
+
+
+.totalRow span {
+
+    color:var(--muted);
+
+    font-weight:600;
+
+    text-transform:capitalize;
+
+}
+
+
+.totalRow strong {
+
+    font-size:20px;
+
+    color:var(--text);
+
+}
+
+
+.navigation {
+
+    margin-top:50px;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+
+.backButton {
+
+    padding:14px 28px;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    background:var(--card);
+
+    color:var(--text);
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.backButton:hover {
+
+    background:var(--panel);
+
+}
+
+
+.loading {
+
+    text-align:center;
+
+    padding:80px 20px;
+
+    color:var(--muted);
+
+    font-size:18px;
+
+}

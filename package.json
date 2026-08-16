@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",
+    "@stripe/react-stripe-js": "^6.8.1",
+    "@stripe/stripe-js": "^9.13.0",
     "axios": "^1.18.1",
     "jwt-decode": "^4.0.0",
     "kafkajs": "^2.2.4",

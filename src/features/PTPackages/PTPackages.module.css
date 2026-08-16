@@ -174,6 +174,59 @@
 }
 
 
+.trainerLabel {
+
+    font-weight:700;
+
+    color:var(--accent-dark) !important;
+
+    text-transform:capitalize;
+
+    margin:10px 0 0;
+
+}
+
+
+.chatButton {
+
+    margin-top:16px !important;
+
+    background:var(--accent) !important;
+
+}
+
+
+.chatButton:hover {
+
+    background:var(--accent-dark) !important;
+
+}
+
+
+.sessionName {
+
+    font-size:20px;
+
+    margin:14px 0 4px;
+
+    color:var(--text);
+
+}
+
+
+.sessionPrice {
+
+    font-size:26px;
+
+    font-weight:800;
+
+    color:var(--accent-dark);
+
+    margin:0 0 10px;
+
+}
+
+
 
 /* Status */
 
@@ -257,6 +310,86 @@
 }
 
 
+.resumeButton {
+
+    background:var(--accent) !important;
+
+    color:white !important;
+
+}
+
+
+.resumeButton:hover {
+
+    background:var(--accent-dark) !important;
+
+}
+
+
+.cardActions {
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+}
+
+
+.cardActions .resumeButton {
+
+    margin-top:0;
+
+}
+
+
+.deleteButton {
+
+    margin-top:25px;
+
+    padding:14px;
+
+    border:1px solid #f8d7da;
+
+    border-radius:10px;
+
+    background:#fdf2f3;
+
+    color:#721c24;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.deleteButton:hover {
+
+    background:#f8d7da;
+
+}
+
+
+.bookButton {
+
+    background:var(--accent) !important;
+
+    color:white !important;
+
+}
+
+
+.bookButton:hover {
+
+    background:var(--accent-dark) !important;
+
+}
+
+
 
 /* Empty state */
 
@@ -289,6 +422,325 @@
     align-items:center;
 
     font-size:22px;
+
+}
+
+
+
+/* Checkout form */
+
+
+
+.formCard {
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    max-width:520px;
+
+    margin:25px auto 0;
+
+    box-shadow:
+    0 2px 8px rgba(20,20,15,.04);
+
+}
+
+
+.formCard h3 {
+
+    font-family:'Bebas Neue', sans-serif;
+
+    font-size:30px;
+
+    margin:0 0 5px;
+
+}
+
+
+.formCard p {
+
+    color:var(--muted);
+
+}
+
+
+.totalRow {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 16px;
+
+    margin:12px 0 16px;
+
+    border-radius:12px;
+
+    background:var(--panel, #F1F0EA);
+
+    border:1px solid var(--border);
+
+}
+
+
+.totalRow span {
+
+    color:var(--muted);
+
+    font-weight:600;
+
+}
+
+
+.totalRow strong {
+
+    font-size:20px;
+
+    color:var(--text);
+
+}
+
+
+.totalRow small {
+
+    display:block;
+
+    color:var(--muted);
+
+    font-weight:500;
+
+    margin-top:2px;
+
+}
+
+
+.sectionHint {
+
+    color:var(--muted);
+
+    margin:-10px 0 20px;
+
+}
+
+
+.trainerCard {
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:
+    0 2px 8px rgba(20,20,15,.04);
+
+    transition:.2s;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+
+.trainerCard:hover {
+
+    transform:translateY(-5px);
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+.trainerPhoto {
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    background:var(--accent);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:16px;
+
+    font-size:38px;
+
+    font-weight:800;
+
+    color:white;
+
+}
+
+
+.trainerPhoto img {
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.trainerName {
+
+    font-size:20px;
+
+    margin:0 0 6px;
+
+    color:var(--text);
+
+    text-transform:capitalize;
+
+}
+
+
+.trainerBio {
+
+    color:var(--muted);
+
+    line-height:1.6;
+
+    margin:0 0 20px;
+
+}
+
+
+.chooseButton {
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--accent);
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+.chooseButton:hover {
+
+    background:var(--accent-dark);
+
+}
+
+
+.selectedBanner {
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:24px 30px;
+
+    box-shadow:
+    0 2px 8px rgba(20,20,15,.04);
+
+}
+
+
+.selectedBanner .trainerPhoto {
+
+    width:64px;
+
+    height:64px;
+
+    font-size:28px;
+
+    margin-bottom:0;
+
+    flex-shrink:0;
+
+}
+
+
+.selectedBanner .trainerName {
+
+    margin:0 0 4px;
+
+}
+
+
+.selectedBanner .trainerBio {
+
+    margin:0;
+
+    text-align:left;
+
+}
+
+
+.changeButton {
+
+    margin-left:auto;
+
+    padding:12px 20px;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    background:transparent;
+
+    color:var(--text);
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    white-space:nowrap;
+
+}
+
+
+.changeButton:hover {
+
+    background:var(--panel, #F1F0EA);
 
 }
 

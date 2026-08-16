@@ -162,6 +162,32 @@ font-size:24px;
 
 }
 
+.formCard{
+
+background:var(--card);
+border:1px solid var(--border);
+border-radius:18px;
+padding:30px;
+max-width:520px;
+margin:25px auto 0;
+box-shadow:0 2px 8px rgba(20,20,15,.04);
+
+}
+
+.formCard h3{
+
+font-family:'Bebas Neue';
+font-size:30px;
+margin:0 0 5px;
+
+}
+
+.formCard p{
+
+color:var(--muted);
+
+}
+
 @media(max-width:768px){
 
 .page{

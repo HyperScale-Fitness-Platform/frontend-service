@@ -1,44 +1,49 @@
 import apiGatewayClient from "../../utils/api_getway";
 
 
-// Get available PT package types
+// Get available PT session offerings (admin-defined catalog)
 export const getPtPackageTypes = async () => {
 
     const response =
         await apiGatewayClient.get(
-            "/operations/pt-packages/types"
+            "/operations/pt-sessions"
         );
 
     return response.data;
 
 };
 
-export const getAvailableTrainers = async () => {
+
+
+// Get trainers customers can purchase PT sessions with
+export const getTrainers = async () => {
 
     const response =
         await apiGatewayClient.get(
-            "/operations/trainers/available"
+            "/api/profiles/trainers"
         );
 
     return response.data;
+
 };
 
 
 
-
-// Purchase PT package
-export const purchasePtPackage = async (trainerId, packageType) => {
+// Purchase PT session offering
+export const purchasePtPackage = async (sessionId, trainerId) => {
 
     const response =
         await apiGatewayClient.post(
             "/operations/pt-packages/purchase",
             {
                 trainerId,
-                packageType
+
+                sessionId
             }
         );
 
     return response.data;
+
 };
 
 
@@ -65,6 +70,21 @@ export const getCustomerPackages = async () => {
     const response =
         await apiGatewayClient.get(
             `/operations/customers/${customerId}/pt-packages`
+        );
+
+
+    return response.data;
+
+};
+
+
+
+// Delete an orphaned pending package (one that has no payment row behind it)
+export const deletePendingPackage = async (packageId) => {
+
+    const response =
+        await apiGatewayClient.delete(
+            `/operations/pt-packages/${packageId}`
         );
 
 

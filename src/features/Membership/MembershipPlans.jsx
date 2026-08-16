@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../Payment/CheckoutForm";
 import styles from "./MembershipPlans.module.css";
 
 import {
@@ -9,6 +12,9 @@ import {
     getCurrentMembership,
 } from "./membershipApi";
 
+const stripePromise =
+    loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
 export default function MembershipPlans() {
 
     const navigate = useNavigate();
@@ -16,6 +22,7 @@ export default function MembershipPlans() {
     const [plans, setPlans] = useState([]);
     const [membership, setMembership] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [clientSecret, setClientSecret] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -49,13 +56,11 @@ export default function MembershipPlans() {
 
         try {
 
-            await subscribeToPlan(planId);
+            const result = await subscribeToPlan(planId);
 
-            toast.success(
-                "Membership activated successfully!"
-            );
-
-            loadData();
+            if (result.clientSecret) {
+                setClientSecret(result.clientSecret);
+            }
 
         }
 
@@ -67,6 +72,18 @@ export default function MembershipPlans() {
             );
 
         }
+
+    }
+
+    function handlePaymentSuccess() {
+
+        setClientSecret(null);
+
+        toast.success(
+            "Payment succeeded! Membership activated."
+        );
+
+        loadData();
 
     }
     if (loading)
@@ -154,6 +171,32 @@ export default function MembershipPlans() {
                 }
 
             </div>
+
+            {
+                clientSecret && (
+
+                    <div className={styles.formCard}>
+
+                        <h3>Complete Payment</h3>
+
+                        <p>
+                            Enter your card details to activate
+                            your membership.
+                        </p>
+
+                        <Elements stripe={stripePromise}>
+
+                            <CheckoutForm
+                                clientSecret={clientSecret}
+                                onSuccess={handlePaymentSuccess}
+                            />
+
+                        </Elements>
+
+                    </div>
+
+                )
+            }
 
             <button
                 className={styles.backButton}

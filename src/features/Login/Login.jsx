@@ -29,12 +29,15 @@ export default function Login() {
     try {
       const res = await apiGatewayClient.post('/auth/login', data);
 
+      let role = null;
+
       if (res.data && res.data.token) {
         // Changed key to customerToken
         localStorage.setItem('customerToken', res.data.token);
 
         // Decode the JWT to extract the user id (sub claim) so pages can identify the logged-in user
         const decoded = jwtDecode(res.data.token);
+        role = decoded?.role ?? null;
         if (decoded && decoded.sub) {
           localStorage.setItem('userId', decoded.sub);
         }
@@ -42,7 +45,17 @@ export default function Login() {
 
       toast.success("Login successful! Redirecting...");
 
-      const destination = location.state?.from || '/customerHomePage';
+      // Route by role: admins go to the admin side, customers go home.
+      const from = location.state?.from;
+      const isAdmin = role === 'admin';
+
+      let destination;
+
+      if (isAdmin) {
+        destination = from && from.startsWith('/admin') ? from : '/admin';
+      } else {
+        destination = from || '/customerHomePage';
+      }
 
       setTimeout(() => {
         navigate(destination, { replace: true });

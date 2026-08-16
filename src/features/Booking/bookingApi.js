@@ -1,7 +1,8 @@
 import apiGatewayClient from "../../utils/api_getway";
 
 
-// Single trainer used across the app for now (matches PTPackages purchase flow)
+// Single trainer used across the app for now (matches the profile service list)
+const TRAINER_ID = "6930678d-b99e-41b4-a9b4-5575671bf383";
 
 
 function getCustomerId() {
@@ -52,97 +53,51 @@ export const getClassSessions = async (classId) => {
 
 };
 
-// Get available slots for a specific trainer
-export const getTrainerSlots = async (trainerId) => {
-
-    const response =
-        await apiGatewayClient.get(
-            `/operations/trainers/${trainerId}/slots`
-        );
-
-    return response.data;
-};
-
 
 
 // Get the trainer's open slots
-// export const getTrainerSlots = async () => {
+export const getTrainerSlots = async () => {
 
-//     const response =
-//         await apiGatewayClient.get(
-//             `/operations/trainers/${TRAINER_ID}/slots`
-//         );
+    const response =
+        await apiGatewayClient.get(
+            `/operations/trainers/${TRAINER_ID}/slots`
+        );
 
-//     return response.data;
+    return response.data;
 
-// };
+};
 
 
 
 // Get available slots for a purchased PT package
-// export const getPackageAvailableSlots = async (ptPackageId) => {
+export const getPackageAvailableSlots = async (ptPackageId) => {
 
-//     const customerId = getCustomerId();
-//     const response =
-//         await apiGatewayClient.get(
-//             `/operations/pt-packages/${ptPackageId}/available-slots`,
+    const response =
+        await apiGatewayClient.get(
+            `/operations/pt-packages/${ptPackageId}/available-slots`
+        );
 
-//             {
-//                 headers: {
-//                     "user-id": customerId,
-//                 },
-//             }
-//         );
+    return response.data;
 
-//     return response.data;
-
-// };
+};
 
 
 
 // Get the current customer's bookings
-// export const getCustomerBookings = async () => {
-
-//     const customerId =
-//         getCustomerId();
-
-//     const response =
-//         await apiGatewayClient.get(
-//             `/operations/customers/${customerId}/bookings`
-//         );
-
-//     return response.data;
-
-// };
-
 export const getCustomerBookings = async () => {
-    const customerId = getCustomerId();
 
-    const response = await apiGatewayClient.get(
-        `/operations/customers/${customerId}/bookings`
-    );
+    const customerId =
+        getCustomerId();
 
-    console.log("CUSTOMER BOOKINGS RESPONSE:", response.data);
+    const response =
+        await apiGatewayClient.get(
+            `/operations/customers/${customerId}/bookings`
+        );
 
-    // Handle either:
-    // [ ... ]
-    // or { data: [ ... ] }
-    // or { bookings: [ ... ] }
+    return response.data;
 
-    if (Array.isArray(response.data)) {
-        return response.data;
-    }
-
-    if (Array.isArray(response.data?.data)) {
-        return response.data.data;
-    }
-
-    if (Array.isArray(response.data?.bookings)) {
-        return response.data.bookings;
-    }
-
-    return [];
 };
+
 
 
 // Book a class session
@@ -155,146 +110,63 @@ export const bookClass = async (classSessionId) => {
         await apiGatewayClient.post(
             "/operations/bookings",
             {
+                customerId,
                 type: "class",
                 classSessionId
-            },
-            {
-                headers: {
-                    "user-id": customerId,
-                },
             }
         );
+
     return response.data;
 
 };
 
 
 
-// // Book a PT session using the membership benefit
-// export const bookPtSessionViaMembership = async (trainerSlotId) => {
+// Book a PT session using the membership benefit
+// The backend matches the slot by its start time (slotStart)
+export const bookPtSessionViaMembership = async (slotStart) => {
 
-//     const customerId =
-//         getCustomerId();
-
-//     const response =
-//         await apiGatewayClient.post(
-//             "/operations/bookings",
-//             {
-//                 customerId,
-//                 type: "pt_session",
-//                 trainerSlotId,
-//                 sessionSource: "membership"
-//             }
-//         );
-
-//     return response.data;
-
-// };
-
-
-
-// // Book a PT session using a purchased package
-// export const bookPtSessionViaPackage = async (trainerSlotId, ptPackageId) => {
-
-//     const customerId =
-//         getCustomerId();
-
-//     const response =
-//         await apiGatewayClient.post(
-//             "/operations/bookings",
-//             {
-//                 customerId,
-//                 type: "pt_session",
-//                 trainerSlotId,
-//                 sessionSource: "package",
-//                 ptPackageId
-//             }
-//         );
-
-//     return response.data;
-
-// };
-
-export const getBookableSources = async () => {
-    const customerId = getCustomerId();
-
-    const response =
-        await apiGatewayClient.get(
-            "/operations/bookable-sources",
-            {
-                headers: {
-                    "user-id": customerId,
-                },
-            }
-        );
-
-    return response.data;
-};
-
-export const getPackageAvailability = async (
-    packageId,
-    date
-) => {
-    
-    const customerId = getCustomerId();
-
-    const response =
-        await apiGatewayClient.get(
-            `/operations/pt-packages/${packageId}/available-slots`,
-            {
-                params: date ? { date } : {},
-                headers: {
-                    "user-id": customerId,
-                },
-            }
-        );
-
-    return response.data;
-};
-
-export const getFreePtAvailability = async (
-    date
-) => {
-
-    const response =
-        await apiGatewayClient.get(
-            "/operations/pt/free-availability",
-            {
-                params: {
-                    date
-                }
-            }
-        );
-
-    return response.data;
-};
-
-export const bookPtSession = async ({
-    sourceType,
-    sourceId,
-    slotStart
-}) => {
-    const customerId = getCustomerId();
+    const customerId =
+        getCustomerId();
 
     const response =
         await apiGatewayClient.post(
             "/operations/bookings",
             {
+                customerId,
                 type: "pt_session",
-                sourceType,
-                sourceId,
+                sourceType: "free",
                 slotStart
-            },
-            {
-                headers: {
-                    "user-id": customerId,
-                },
             }
         );
 
     return response.data;
+
 };
 
+
+
+// Book a PT session using a purchased package
+export const bookPtSessionViaPackage = async (slotStart, ptPackageId) => {
+
+    const customerId =
+        getCustomerId();
+
+    const response =
+        await apiGatewayClient.post(
+            "/operations/bookings",
+            {
+                customerId,
+                type: "pt_session",
+                sourceType: "package",
+                sourceId: ptPackageId,
+                slotStart
+            }
+        );
+
+    return response.data;
+
+};
 
 
 

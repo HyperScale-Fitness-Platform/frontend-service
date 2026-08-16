@@ -4,6 +4,7 @@ import { getClasses } from './bookingApi';
 import AdminCreateClass from './components/AdminCreateClass';
 import AdminScheduleSession from './components/AdminScheduleSession';
 import TrainerOpenSlot from './components/TrainerOpenSlot';
+import AdminCreatePtSession from './components/AdminCreatePtSession';
 import styles from './Booking.module.css';
 
 const OPTIONS = [
@@ -24,6 +25,12 @@ const OPTIONS = [
     title: 'My Availability',
     description: 'Open a personal training slot for customers to book.',
     icon: '🕒',
+  },
+  {
+    key: 'pt-sessions',
+    title: 'PT Sessions',
+    description: 'Create PT session offerings customers can purchase.',
+    icon: '🏋️‍♂️',
   },
 ];
 
@@ -75,6 +82,9 @@ export default function AdminBooking() {
             )}
             {activePanel === 'availability' && (
               <TrainerOpenSlot onOpened={() => {}} />
+            )}
+            {activePanel === 'pt-sessions' && (
+              <AdminCreatePtSession onCreated={() => {}} />
             )}
           </div>
         )}

@@ -8,17 +8,20 @@ import ManageMembership from '../features/Membership/ManageMembership';
 import Occupancy from '../features/Occupancy/Occupancy';
 import PTPackages from '../features/PTPackages/PTPackages';
 import Booking from '../features/Booking/Booking';
+import Payment from '../features/Payment/Payment';
 import AdminBooking from '../features/Admin/AdminBooking/AdminBooking';
 import ClassesPage from '../features/Admin/AdminBooking/ClassesPage';
 import TrainerManagement from '../features/Admin/TrainerManagement/TrainerManagement'
 import AdminMembership from '../features/Admin/AdminMembership/AdminMembership';
-import ProtectedRoute from '../components/ProtectedRoute';
+import CustomerRoute from '../components/CustomerRoute';
+import AdminRoute from '../components/AdminRoute';
 import CustomerManagement from '../features/Admin/CustomerManagement/CustomerManagement';
-import AdminOccupancy from '../features/Admin/OccupancyManagement/OccupancyManagement';
+// import AdminOccupancy from '../features/Admin/OccupancyManagement/OccupancyManagement';
 import Community from "../features/Community/Community";
-import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 import Chat from "../features/Chat/Chat";
 import TrainerChats from "../features/Chat/TrainerChats";
+// import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
+
 export const router = createBrowserRouter([
 
     {
@@ -30,9 +33,9 @@ export const router = createBrowserRouter([
                 path: 'customerHomePage',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <CustomerHomePage />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
@@ -41,9 +44,9 @@ export const router = createBrowserRouter([
                 path: 'booking',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <Booking />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
@@ -52,9 +55,9 @@ export const router = createBrowserRouter([
                 path: 'membership',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <MembershipPlans />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
@@ -63,36 +66,37 @@ export const router = createBrowserRouter([
                 path: 'manage-membership',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <ManageMembership />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
             {
                 path: "community",
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <Community />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
+
             {
                 path: 'chat/:otherUserId',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <Chat />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
             {
                 path: 'trainer/chats',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <TrainerChats />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
@@ -101,9 +105,9 @@ export const router = createBrowserRouter([
                 path: 'occupancy',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <Occupancy />
-                    </ProtectedRoute>
+                    </CustomerRoute>
                 ),
             },
 
@@ -112,9 +116,20 @@ export const router = createBrowserRouter([
                 path: 'pt-packages',
 
                 element: (
-                    <ProtectedRoute>
+                    <CustomerRoute>
                         <PTPackages />
-                    </ProtectedRoute>
+                    </CustomerRoute>
+                ),
+            },
+
+
+            {
+                path: 'payments',
+
+                element: (
+                    <CustomerRoute>
+                        <Payment />
+                    </CustomerRoute>
                 ),
             },
 
@@ -123,9 +138,9 @@ export const router = createBrowserRouter([
                 path: 'admin/booking',
 
                 element: (
-                    // <ProtectedRoute>
-                    <AdminBooking />
-                    // </ProtectedRoute>
+                    <AdminRoute>
+                        <AdminBooking />
+                    </AdminRoute>
                 ),
             },
 
@@ -133,9 +148,9 @@ export const router = createBrowserRouter([
                 path: 'admin',
 
                 element: (
-                    // <ProtectedRoute>
-                    <AdminBooking />
-                    // </ProtectedRoute>
+                    <AdminRoute>
+                        <AdminBooking />
+                    </AdminRoute>
                 ),
             },
 
@@ -143,7 +158,9 @@ export const router = createBrowserRouter([
                 path: 'admin/classes',
 
                 element: (
-                    <ClassesPage />
+                    <AdminRoute>
+                        <ClassesPage />
+                    </AdminRoute>
                 ),
             },
 
@@ -151,45 +168,45 @@ export const router = createBrowserRouter([
                 path: 'admin/membership',
 
                 element: (
-                    <ProtectedRoute>
+                    <AdminRoute>
                         <AdminMembership />
-                    </ProtectedRoute>
+                    </AdminRoute>
                 ),
             },
             {
                 path: 'admin/trainer',
 
                 element: (
-                    // <ProtectedRoute>
-                    <TrainerManagement />
-                    // </ProtectedRoute>
+                    <AdminRoute>
+                        <TrainerManagement />
+                    </AdminRoute>
                 ),
             },
             {
                 path: 'admin/customer',
                 element: (
-                    // <ProtectedRoute>
-                    <CustomerManagement />
-                    // </ProtectedRoute>
+                    <AdminRoute>
+                        <CustomerManagement />
+                    </AdminRoute>
                 ),
             },
-            {
+            // {
 
-                path: 'admin/occupancy',
-                element: (
-                    <ProtectedRoute>
-                        <AdminOccupancy />
-                    </ProtectedRoute>
-                ),
-            },
-            {
-                path: "admin/community",
-                element: (
-                    <ProtectedRoute>
-                        <CommunityModeration />
-                    </ProtectedRoute>
-                )
-            },
+            //     path: 'admin/occupancy',
+            //     element: (
+            //         <CustomerRoute>
+            //             <AdminOccupancy />
+            //         </CustomerRoute>
+            //     ),
+            // },
+            // {
+            //     path: "admin/community",
+            //     element: (
+            //         <CustomerRoute>
+            //             <CommunityModeration />
+            //         </CustomerRoute>
+            //     )
+            // },
 
         ],
 

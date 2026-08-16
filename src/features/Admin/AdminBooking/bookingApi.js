@@ -14,6 +14,10 @@ export function openTrainerSlot(trainerId, data) {
   return apiGatewayClient.post(`/operations/trainers/${trainerId}/slots`, data);
 }
 
+export function createPtSession(data) {
+  return apiGatewayClient.post('/operations/pt-sessions', data);
+}
+
 export function getTrainerSchedule(trainerId) {
   return apiGatewayClient.get(`/operations/trainers/${trainerId}/schedule`);
 }

@@ -5,19 +5,18 @@ import toast, { Toaster } from "react-hot-toast";
 import {
     getAllClasses,
     getClassSessions,
-    getCustomerBookings,
     getTrainerSlots,
+    getPackageAvailableSlots,
+    getCustomerBookings,
     bookClass,
-    getBookableSources,
-    getPackageAvailability,
-    getFreePtAvailability,
-    bookPtSession,
+    bookPtSessionViaMembership,
+    bookPtSessionViaPackage,
     cancelBooking,
     rescheduleBooking,
 } from "./bookingApi";
 
-// import { getCurrentMembership } from "../Membership/membershipApi";
-// import { getCustomerPackages } from "../PTPackages/ptPackagesApi";
+import { getCurrentMembership } from "../Membership/membershipApi";
+import { getCustomerPackages } from "../PTPackages/ptPackagesApi";
 
 import styles from "./Booking.module.css";
 
@@ -29,35 +28,19 @@ export default function Booking() {
     const [loading, setLoading] = useState(true);
 
     const [classes, setClasses] = useState([]);
+    const [trainerSlots, setTrainerSlots] = useState([]);
+    const [packageSlots, setPackageSlots] = useState([]);
     const [bookings, setBookings] = useState([]);
-    // const [trainerSlots, setTrainerSlots] = useState([]);
 
-    // const [membership, setMembership] = useState(null);
-    // const [packages, setPackages] = useState([]);
+    const [membership, setMembership] = useState(null);
+    const [packages, setPackages] = useState([]);
 
     const [selectedClassId, setSelectedClassId] = useState(null);
     const [sessions, setSessions] = useState([]);
 
     const [reschedulingId, setReschedulingId] = useState(null);
     const [rescheduleSlotId, setRescheduleSlotId] = useState("");
-    const [rescheduleSlots, setRescheduleSlots] = useState([]);
-    const [loadingRescheduleSlots, setLoadingRescheduleSlots] = useState(false);
 
-
-    const [bookableSources, setBookableSources] =
-        useState({
-            packages: [],
-            freeCredit: {
-                available: false,
-                remaining: 0,
-            },
-        });
-
-    const [selectedSource, setSelectedSource] = useState(null);
-
-    const [ptSlots, setPtSlots] = useState([]);
-
-    const [loadingPtSlots, setLoadingPtSlots] = useState(false);
 
     useEffect(() => {
 
@@ -72,63 +55,52 @@ export default function Booking() {
 
             const [
                 classesData,
+                slotsData,
                 bookingsData,
-                sourcesData,
+                membershipData,
+                packagesData,
             ] = await Promise.all([
                 getAllClasses(),
+                getTrainerSlots(),
                 getCustomerBookings(),
-                getBookableSources(),
+                getCurrentMembership().catch(() => null),
+                getCustomerPackages().catch(() => []),
             ]);
 
-            // setClasses(classesData);
-            // setBookings(bookingsData);
-            // setMembership(membershipData);
-            // setPackages(packagesData);
-            // setBookableSources(sourcesData);
+            setClasses(classesData);
+            setTrainerSlots(slotsData);
+            setBookings(bookingsData);
+            setMembership(membershipData);
+            setPackages(packagesData);
 
-            setClasses(
-                Array.isArray(classesData) ? classesData : []
-            );
+            const activePkg =
+                packagesData.find(
+                    pkg =>
+                        pkg.status === "ACTIVE" &&
+                        pkg.sessionsTotal - pkg.sessionsUsed > 0
+                );
 
-            // setTrainerSlots(
-            //     Array.isArray(trainerSlotsData) ? trainerSlotsData : []
-            // );
+            if (activePkg) {
 
-            setBookings(
-                Array.isArray(bookingsData) ? bookingsData : []
-            );
+                const pkgSlots =
+                    await getPackageAvailableSlots(activePkg.id);
 
-            // setMembership(membershipData);
+                setPackageSlots(pkgSlots);
 
-            // setPackages(
-            //     Array.isArray(packagesData) ? packagesData : []
-            // );
+            }
+            else {
 
-            setBookableSources({
-                packages:
-                    Array.isArray(
-                        sourcesData?.packages
-                    )
-                        ? sourcesData.packages
-                        : [],
+                setPackageSlots([]);
 
-                freeCredit:
-                    sourcesData?.freeCredit ?? {
-                        available: false,
-                        remaining: 0,
-                    },
-            });
+            }
+
         }
         catch (error) {
-            console.error("BOOKING LOAD ERROR:", error);
-            console.error("STATUS:", error.response?.status);
-            console.error("URL:", error.config?.url);
-            console.error("RESPONSE:", error.response?.data);
 
             toast.error(
-                error.response?.data?.message ||
                 "Unable to load booking data"
             );
+
         }
         finally {
 
@@ -139,18 +111,18 @@ export default function Booking() {
     }
 
 
-    // const hasMembershipPt =
-    //     membership?.status === "ACTIVE" &&
-    //     membership.plan?.benefits?.some(
-    //         b => b.benefitName === "PT_SESSIONS"
-    //     );
+    const hasMembershipPt =
+        membership?.status === "ACTIVE" &&
+        membership.plan?.benefits?.some(
+            b => b.benefitName === "PT_SESSIONS"
+        );
 
-    // const activePackage =
-    //     packages.find(
-    //         pkg =>
-    //             pkg.status === "ACTIVE" &&
-    //             pkg.sessionsTotal - pkg.sessionsUsed > 0
-    //     );
+    const activePackage =
+        packages.find(
+            pkg =>
+                pkg.status === "ACTIVE" &&
+                pkg.sessionsTotal - pkg.sessionsUsed > 0
+        );
 
 
     // Bookings don't carry their own startTime -- the backend nests it under
@@ -217,180 +189,85 @@ export default function Booking() {
 
 
     async function handleBookClass(classSessionId) {
-    try {
-        await bookClass(classSessionId);
-
-        toast.success("Class booked successfully");
-
-        // Refresh bookings and other booking data
-        await loadData();
-
-        // Refresh the currently displayed class sessions
-        if (selectedClassId) {
-            const updatedSessions =
-                await getClassSessions(selectedClassId);
-
-            setSessions(
-                Array.isArray(updatedSessions)
-                    ? updatedSessions
-                    : []
-            );
-        }
-
-    } catch (error) {
-        toast.error(
-            error.response?.data?.message ||
-            "Booking failed"
-        );
-    }
-}
-
-    async function selectPtSource(source) {
-
-        setSelectedSource(source);
-
-        setLoadingPtSlots(true);
 
         try {
 
-            let slots;
+            await bookClass(classSessionId);
 
-            if (source.type === "package") {
-
-                slots =
-                    await getPackageAvailability(
-                        source.id
-                    );
-
-            } else {
-
-                slots =
-                    await getFreePtAvailability();
-
-            }
-
-            setPtSlots(slots);
-
-        } catch (error) {
-
-            toast.error(
-                error.response?.data?.message ||
-                "Unable to load PT availability"
+            toast.success(
+                "Class booked successfully"
             );
 
-        } finally {
-
-            setLoadingPtSlots(false);
-        }
-    }
-
-
-    // async function handleBookPt(trainerSlotId, source) {
-
-    //     try {
-
-    //         if (source === "package")
-    //             await bookPtSessionViaPackage(
-    //                 trainerSlotId,
-    //                 activePackage.id
-    //             );
-    //         else
-    //             await bookPtSessionViaMembership(
-    //                 trainerSlotId
-    //             );
-
-    //         toast.success(
-    //             "PT session booked successfully"
-    //         );
-
-    //         loadData();
-
-    //     }
-    //     catch (error) {
-
-    //         toast.error(
-    //             error.response?.data?.message ||
-    //             "Booking failed"
-    //         );
-
-    //     }
-
-    // }
-
-
-    async function handleCancel(bookingId) {
-    try {
-        await cancelBooking(bookingId);
-
-        toast.success("Booking cancelled");
-
-        await loadData();
-
-        // Refresh currently displayed class sessions
-        if (selectedClassId) {
-            const updatedSessions =
-                await getClassSessions(selectedClassId);
-
-            setSessions(
-                Array.isArray(updatedSessions)
-                    ? updatedSessions
-                    : []
-            );
-        }
-
-    } catch (error) {
-        toast.error(
-            error.response?.data?.message ||
-            "Unable to cancel booking"
-        );
-    }
-}
-
-
-    async function startReschedule(booking) {
-
-        setReschedulingId(booking.id);
-        setRescheduleSlotId("");
-        setRescheduleSlots([]);
-        setLoadingRescheduleSlots(true);
-
-        try {
-
-            if (!booking.trainerId) {
-                toast.error("Trainer information is unavailable");
-                return;
-            }
-
-            const slots =
-                await getTrainerSlots(
-                    booking.trainerId
-                );
-
-            setRescheduleSlots(
-                Array.isArray(slots)
-                    ? slots
-                    : []
-            );
+            loadData();
 
         }
         catch (error) {
 
-            console.error(
-                "RESCHEDULE SLOTS ERROR:",
-                error
+            toast.error(
+                error.response?.data?.message ||
+                "Booking failed"
             );
+
+        }
+
+    }
+
+
+    async function handleBookPt(slot, source) {
+
+        try {
+
+            if (source === "package")
+                await bookPtSessionViaPackage(
+                    slot.startTime,
+                    activePackage.id
+                );
+            else
+                await bookPtSessionViaMembership(
+                    slot.startTime
+                );
+
+            toast.success(
+                "PT session booked successfully"
+            );
+
+            loadData();
+
+        }
+        catch (error) {
 
             toast.error(
                 error.response?.data?.message ||
-                "Unable to load trainer availability"
+                "Booking failed"
             );
 
         }
-        finally {
 
-            setLoadingRescheduleSlots(false);
+    }
+
+
+    async function handleCancel(bookingId) {
+
+        try {
+
+            await cancelBooking(bookingId);
+
+            toast.success(
+                "Booking cancelled"
+            );
+
+            loadData();
 
         }
+        catch (error) {
+
+            toast.error(
+                error.response?.data?.message ||
+                "Unable to cancel booking"
+            );
+
+        }
+
     }
 
 
@@ -419,7 +296,6 @@ export default function Booking() {
 
             setReschedulingId(null);
             setRescheduleSlotId("");
-            setRescheduleSlots([]);
 
             loadData();
 
@@ -481,176 +357,136 @@ export default function Booking() {
 
                     bookings.filter(b => b.status !== "cancelled").length === 0
 
-                        ?
+                    ?
 
-                        <div className={styles.emptyCard}>
+                    <div className={styles.emptyCard}>
 
-                            <h3>
-                                No Bookings Yet
-                            </h3>
+                        <h3>
+                            No Bookings Yet
+                        </h3>
 
-                            <p>
-                                Book a class or a PT session below.
-                            </p>
+                        <p>
+                            Book a class or a PT session below.
+                        </p>
 
-                        </div>
+                    </div>
 
-                        :
+                    :
 
-                        <div className={styles.grid}>
+                    <div className={styles.grid}>
 
-                            {
+                        {
 
-                                bookings
-                                    .filter(b => b.status !== "cancelled")
-                                    .map(booking => (
+                            bookings
+                                .filter(b => b.status !== "cancelled")
+                                .map(booking => (
 
-                                        <div
-                                            key={booking.id}
-                                            className={styles.card}
-                                        >
+                                <div
+                                    key={booking.id}
+                                    className={styles.card}
+                                >
 
-                                            <h3>
-                                                {getBookingTitle(booking)}
-                                            </h3>
+                                    <h3>
+                                        {getBookingTitle(booking)}
+                                    </h3>
 
-                                            <span className={styles.status}>
-                                                {booking.status}
-                                            </span>
+                                    <span className={styles.status}>
+                                        {booking.status}
+                                    </span>
 
-                                            <p>
-                                                {getBookingDateLabel(booking)}
-                                            </p>
+                                    <p>
+                                        {getBookingDateLabel(booking)}
+                                    </p>
 
-                                            {booking.type === "pt_session" && booking.trainer && (
-                                                <div className={styles.trainerInfo}>
+                                    {
+                                        booking.status === "confirmed" && (
 
-                                                    {booking.trainer.photoUrl && (
-                                                        <img
-                                                            src={booking.trainer.photoUrl}
-                                                            alt={booking.trainer.fullName}
-                                                            className={styles.trainerPhoto}
-                                                        />
-                                                    )}
+                                            <div className={styles.actions}>
 
-                                                    <div>
-                                                        <p>
-                                                            <strong>Trainer:</strong>{" "}
-                                                            {booking.trainer.fullName}
-                                                        </p>
+                                                <button
+                                                    onClick={() =>
+                                                        handleCancel(booking.id)
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
 
-                                                        {booking.trainer.bio && (
-                                                            <p>
-                                                                {booking.trainer.bio}
-                                                            </p>
-                                                        )}
+                                                {
+                                                    booking.type === "pt_session" && (
 
-                                                        {booking.trainer.gender && (
-                                                            <p>
-                                                                Gender: {booking.trainer.gender}
-                                                            </p>
-                                                        )}
-                                                    </div>
+                                                        reschedulingId === booking.id
 
-                                                </div>
-                                            )}
+                                                        ?
 
-                                            {
-                                                booking.status === "confirmed" && (
+                                                        <div className={styles.rescheduleBox}>
 
-                                                    <div className={styles.actions}>
+                                                            <select
+                                                                value={rescheduleSlotId}
+                                                                onChange={e =>
+                                                                    setRescheduleSlotId(e.target.value)
+                                                                }
+                                                            >
+
+                                                                <option value="">
+                                                                    Choose a slot
+                                                                </option>
+
+                                                                {
+
+                                                                    trainerSlots.map(slot => (
+
+                                                                        <option
+                                                                            key={slot.id}
+                                                                            value={slot.id}
+                                                                        >
+                                                                            {
+                                                                                new Date(
+                                                                                    slot.startTime
+                                                                                ).toLocaleString()
+                                                                            }
+                                                                        </option>
+
+                                                                    ))
+
+                                                                }
+
+                                                            </select>
+
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleReschedule(booking.id)
+                                                                }
+                                                            >
+                                                                Confirm
+                                                            </button>
+
+                                                        </div>
+
+                                                        :
 
                                                         <button
                                                             onClick={() =>
-                                                                handleCancel(booking.id)
+                                                                setReschedulingId(booking.id)
                                                             }
                                                         >
-                                                            Cancel
+                                                            Reschedule
                                                         </button>
 
-                                                        {
-                                                            booking.type === "pt_session" && (
+                                                    )
+                                                }
 
-                                                                reschedulingId === booking.id
+                                            </div>
 
-                                                                    ?
+                                        )
+                                    }
 
-                                                                    <div className={styles.rescheduleBox}>
+                                </div>
 
-                                                                        <select
-                                                                            value={rescheduleSlotId}
-                                                                            onChange={e =>
-                                                                                setRescheduleSlotId(e.target.value)
-                                                                            }
-                                                                        >
+                            ))
 
-                                                                            <option value="">
-                                                                                Choose a slot
-                                                                            </option>
-                                                                            {
-                                                                                loadingRescheduleSlots ? (
+                        }
 
-                                                                                    <option value="">
-                                                                                        Loading available slots...
-                                                                                    </option>
-
-                                                                                ) : (
-
-                                                                                    rescheduleSlots.map(slot => (
-
-                                                                                        <option
-                                                                                            key={slot.id}
-                                                                                            value={slot.id}
-                                                                                        >
-                                                                                            {
-                                                                                                new Date(
-                                                                                                    slot.startTime
-                                                                                                ).toLocaleString()
-                                                                                            }
-                                                                                        </option>
-
-                                                                                    ))
-
-                                                                                )
-                                                                            }
-
-                                                                        </select>
-
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleReschedule(booking.id)
-                                                                            }
-                                                                        >
-                                                                            Confirm
-                                                                        </button>
-
-                                                                    </div>
-
-                                                                    :
-
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            startReschedule(booking)
-                                                                        }
-                                                                    >
-                                                                        Reschedule
-                                                                    </button>
-
-                                                            )
-                                                        }
-
-                                                    </div>
-
-                                                )
-                                            }
-
-                                        </div>
-
-                                    ))
-
-                            }
-
-                        </div>
+                    </div>
 
                 }
 
@@ -704,47 +540,47 @@ export default function Booking() {
 
                                                 sessions.length === 0
 
-                                                    ?
+                                                ?
 
-                                                    <p>
-                                                        No upcoming sessions.
-                                                    </p>
+                                                <p>
+                                                    No upcoming sessions.
+                                                </p>
 
-                                                    :
+                                                :
 
-                                                    sessions.map(session => (
+                                                sessions.map(session => (
 
-                                                        <div
-                                                            key={session.id}
-                                                            className={styles.sessionRow}
+                                                    <div
+                                                        key={session.id}
+                                                        className={styles.sessionRow}
+                                                    >
+
+                                                        <span>
+                                                            {
+                                                                new Date(
+                                                                    session.startTime
+                                                                ).toLocaleString()
+                                                            }
+                                                            {" — "}
+                                                            {
+                                                                session.spotsRemaining > 0
+                                                                    ? `${session.spotsRemaining} spots left`
+                                                                    : "Full"
+                                                            }
+                                                        </span>
+
+                                                        <button
+                                                            disabled={session.spotsRemaining <= 0}
+                                                            onClick={() =>
+                                                                handleBookClass(session.id)
+                                                            }
                                                         >
+                                                            Book
+                                                        </button>
 
-                                                            <span>
-                                                                {
-                                                                    new Date(
-                                                                        session.startTime
-                                                                    ).toLocaleString()
-                                                                }
-                                                                {" — "}
-                                                                {
-                                                                    session.spotsRemaining > 0
-                                                                        ? `${session.spotsRemaining} spots left`
-                                                                        : "Full"
-                                                                }
-                                                            </span>
+                                                    </div>
 
-                                                            <button
-                                                                disabled={session.spotsRemaining <= 0}
-                                                                onClick={() =>
-                                                                    handleBookClass(session.id)
-                                                                }
-                                                            >
-                                                                Book
-                                                            </button>
-
-                                                        </div>
-
-                                                    ))
+                                                ))
 
                                             }
 
@@ -764,8 +600,8 @@ export default function Booking() {
 
             </section>
 
+{/* BOOK A PT SESSION */}
 
-            {/* BOOK A PT SESSION */}
 
             <section>
 
@@ -773,257 +609,166 @@ export default function Booking() {
                     Book a PT Session
                 </h2>
 
-                {/* SOURCE SELECTION */}
+                {
 
-                {!selectedSource && (
+                    !hasMembershipPt && !activePackage && (
 
-                    <div className={styles.grid}>
+                        <p className={styles.notice}>
+                            You need an active membership with PT sessions or a PT package to book a session.
+                        </p>
 
-                        {
-                            bookableSources.packages.map(pkg => (
+                    )
 
-                                <div
-                                    key={pkg.id}
-                                    className={styles.card}
-                                >
+                }
 
-                                    <h3>
-                                        PT Package
-                                    </h3>
+                {/* USE A PURCHASED PACKAGE */}
+
+                {
+
+                    activePackage && (
+
+                        <div className={styles.sourceGroup}>
+
+                            <h3>
+                                Use your PT Package
+                            </h3>
+
+                            {
+
+                                packageSlots.length === 0
+
+                                ?
+
+                                <p className={styles.notice}>
+                                    No trainer slots are available right now.
+                                </p>
+
+                                :
+
+                                <div className={styles.grid}>
 
                                     {
-                                        pkg.trainer ? (
-                                            <div className={styles.trainerInfo}>
 
-                                                {
-                                                    pkg.trainer.photoUrl && (
-                                                        <img
-                                                            src={pkg.trainer.photoUrl}
-                                                            alt={pkg.trainer.fullName}
-                                                            className={styles.trainerPhoto}
-                                                        />
-                                                    )
-                                                }
+                                        packageSlots.map(slot => (
 
-                                                <div>
-                                                    <p>
-                                                        Trainer: {pkg.trainer.fullName}
-                                                    </p>
+                                            <div
+                                                key={slot.id}
+                                                className={styles.card}
+                                            >
 
+                                                <h3>
                                                     {
-                                                        pkg.trainer.bio && (
-                                                            <p>
-                                                                {pkg.trainer.bio}
-                                                            </p>
-                                                        )
+                                                        new Date(
+                                                            slot.startTime
+                                                        ).toLocaleString()
                                                     }
+                                                </h3>
+
+                                                <p>
+                                                    with your trainer
+                                                </p>
+
+                                                <div className={styles.actions}>
+
+                                                    <button
+                                                        onClick={() =>
+                                                            handleBookPt(slot, "package")
+                                                        }
+                                                    >
+                                                        Book with Package
+                                                    </button>
+
                                                 </div>
 
                                             </div>
-                                        ) : (
-                                            <p>
-                                                Trainer information unavailable
-                                            </p>
-                                        )
+
+                                        ))
+
                                     }
 
-                                    <p>
-                                        Remaining:
-                                        {" "}
-                                        {pkg.remainingSessions}
-                                    </p>
-
-                                    <button
-                                        onClick={() =>
-                                            selectPtSource({
-                                                type: "package",
-                                                id: pkg.id
-                                            })
-                                        }
-                                    >
-                                        Use Package
-                                    </button>
-
                                 </div>
 
-                            ))
-                        }
-
-
-                        {
-                            bookableSources.freeCredit?.remaining > 0 && (
-
-                                <div className={styles.card}>
-
-                                    <h3>
-                                        Membership PT Credit
-                                    </h3>
-
-                                    <p>
-                                        Remaining:
-                                        {" "}
-                                        {bookableSources.freeCredit.remaining}
-                                    </p>
-
-                                    <p>
-                                        Trainer will be assigned automatically.
-                                    </p>
-
-                                    <button
-                                        onClick={() =>
-                                            selectPtSource({
-                                                type: "free"
-                                            })
-                                        }
-                                    >
-                                        Use Membership Credit
-                                    </button>
-
-                                </div>
-                            )
-                        }
-
-                    </div>
-                )}
-
-
-                {/* AVAILABILITY */}
-
-                {
-                    selectedSource && (
-
-                        <div>
-
-                            <button
-                                className={styles.backButton}
-                                onClick={() => {
-                                    setSelectedSource(null);
-                                    setPtSlots([]);
-                                }}
-                            >
-                                ← Choose another source
-                            </button>
-
-
-                            <h3>
-                                Available PT Sessions
-                            </h3>
-
-
-                            {
-                                loadingPtSlots
-
-                                    ?
-
-                                    <p>
-                                        Loading availability...
-                                    </p>
-
-                                    :
-
-                                    ptSlots.length === 0
-
-                                        ?
-
-                                        <p className={styles.notice}>
-                                            No sessions available.
-                                        </p>
-
-                                        :
-
-                                        <div className={styles.grid}>
-
-                                            {
-                                                ptSlots.map(slot => (
-
-                                                    <div
-                                                        key={slot.id || slot.startTime}
-                                                        className={styles.card}
-                                                    >
-
-                                                        <h3>
-                                                            {
-                                                                new Date(
-                                                                    slot.startTime
-                                                                ).toLocaleString()
-                                                            }
-                                                        </h3>
-
-                                                        {
-                                                            selectedSource.type === "free" && (
-
-                                                                <p>
-                                                                    Trainer assigned automatically
-                                                                </p>
-
-                                                            )
-                                                        }
-
-
-                                                        {
-                                                            selectedSource.type === "package" && (
-
-                                                                <p>
-                                                                    Your package trainer
-                                                                </p>
-
-                                                            )
-                                                        }
-
-
-                                                        <button
-                                                            onClick={async () => {
-
-                                                                try {
-
-                                                                    const booking =
-                                                                        await bookPtSession({
-                                                                            sourceType: selectedSource.type,
-
-                                                                            ...(selectedSource.type === "package"
-                                                                                ? {
-                                                                                    sourceId: selectedSource.id
-                                                                                }
-                                                                                : {}),
-
-                                                                            slotStart: slot.startTime
-                                                                        });
-
-                                                                    toast.success(
-                                                                        "PT session booked successfully"
-                                                                    );
-
-                                                                    setSelectedSource(null);
-                                                                    setPtSlots([]);
-
-                                                                    loadData();
-
-                                                                }
-                                                                catch (error) {
-
-                                                                    toast.error(
-                                                                        error.response?.data?.message ||
-                                                                        "Booking failed"
-                                                                    );
-
-                                                                }
-
-                                                            }}
-                                                        >
-                                                            Book Session
-                                                        </button>
-
-                                                    </div>
-
-                                                ))
-                                            }
-
-                                        </div>
                             }
 
                         </div>
 
                     )
+
+                }
+
+                {/* USE MEMBERSHIP CREDIT */}
+
+                {
+
+                    hasMembershipPt && (
+
+                        <div className={styles.sourceGroup}>
+
+                            <h3>
+                                Use your Membership
+                            </h3>
+
+                            {
+
+                                trainerSlots.length === 0
+
+                                ?
+
+                                <p className={styles.notice}>
+                                    No trainer slots are available right now.
+                                </p>
+
+                                :
+
+                                <div className={styles.grid}>
+
+                                    {
+
+                                        trainerSlots.map(slot => (
+
+                                            <div
+                                                key={slot.id}
+                                                className={styles.card}
+                                            >
+
+                                                <h3>
+                                                    {
+                                                        new Date(
+                                                            slot.startTime
+                                                        ).toLocaleString()
+                                                    }
+                                                </h3>
+
+                                                <p>
+                                                    with your trainer
+                                                </p>
+
+                                                <div className={styles.actions}>
+
+                                                    <button
+                                                        onClick={() =>
+                                                            handleBookPt(slot, "membership")
+                                                        }
+                                                    >
+                                                        Book with Membership
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        ))
+
+                                    }
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    )
+
                 }
 
             </section>
