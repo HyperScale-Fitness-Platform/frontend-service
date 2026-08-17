@@ -1,10 +1,6 @@
 import apiGatewayClient from "../../utils/api_getway";
 
 
-// Single trainer used across the app for now (matches the profile service list)
-const TRAINER_ID = "6930678d-b99e-41b4-a9b4-5575671bf383";
-
-
 function getCustomerId() {
 
     const token =
@@ -55,12 +51,39 @@ export const getClassSessions = async (classId) => {
 
 
 
-// Get the trainer's open slots
-export const getTrainerSlots = async () => {
+// Get the sources a customer can use to book PT sessions
+// (purchased packages + free membership PT credits)
+export const getBookableSources = async () => {
+
+    const customerId =
+        getCustomerId();
 
     const response =
         await apiGatewayClient.get(
-            `/operations/trainers/${TRAINER_ID}/slots`
+            "/operations/bookable-sources",
+            {
+                headers: {
+                    "user-id": customerId,
+                },
+            }
+        );
+
+    return response.data;
+
+};
+
+
+
+// Get all open PT availability slots across trainers
+// (free / membership credit sessions)
+export const getFreePtAvailability = async (date) => {
+
+    const response =
+        await apiGatewayClient.get(
+            "/operations/pt/free-availability",
+            {
+                params: date ? { date } : {},
+            }
         );
 
     return response.data;

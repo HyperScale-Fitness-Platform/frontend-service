@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 import CreatePlan from "./components/CreatePlan";
 import AddBenefit from "./components/AddBenefit";
 
-import { getAdminPlans } from "./membershipAdminApi";
+import { getAdminPlans, deletePlan } from "./membershipAdminApi";
 import styles from "../AdminBooking/Booking.module.css";
 
 
@@ -30,6 +31,8 @@ export default function AdminMembership() {
 
     const [plans, setPlans] = useState([]);
 
+    const [deletingId, setDeletingId] = useState(null);
+
 
 
     async function loadPlans() {
@@ -44,6 +47,54 @@ export default function AdminMembership() {
         catch (error) {
 
             console.log(error);
+
+        }
+
+    }
+
+
+
+    async function handleDeletePlan(plan) {
+
+        const confirmed =
+            window.confirm(
+                `Delete "${plan.name}"? This removes the plan and cancels the membership of every customer subscribed to it.`
+            );
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+        setDeletingId(plan.id);
+
+        try {
+
+            await deletePlan(plan.id);
+
+            toast.success(
+                "Plan deleted"
+            );
+
+            setPlans(prev =>
+                prev.filter(p =>
+                    p.id !== plan.id
+                )
+            );
+
+        }
+        catch (error) {
+
+            toast.error(
+                error.response?.data?.message ||
+                "Unable to delete plan"
+            );
+
+        }
+        finally {
+
+            setDeletingId(null);
 
         }
 
@@ -172,75 +223,111 @@ export default function AdminMembership() {
 
                             :
 
-                            plans.map(plan => (
+                            <div className={styles.grid}>
 
-                                <div key={plan.id}>
+                                {
 
-                                    <h3>
-                                        {plan.name}
-                                    </h3>
+                                    plans.map(plan => (
 
+                                        <div
+                                            key={plan.id}
+                                            className={styles.card}
+                                        >
 
-                                    <p>
-                                        {plan.price} EGP
-                                    </p>
-
-
-                                    <p>
-                                        Duration:
-                                        {" "}
-                                        {plan.durationInDays} days
-                                    </p>
+                                            <h3 className={styles.cardTitle}>
+                                                {plan.name}
+                                            </h3>
 
 
-                                    <p>
-                                        Max Freezes:
-                                        {" "}
-                                        {plan.maxFreezes}
-                                    </p>
-
-
-                                    <h4>
-                                        Benefits
-                                    </h4>
-
-
-                                    {
-                                        plan.benefits?.length > 0
-
-                                            ?
-
-                                            <ul>
-
-                                                {
-                                                    plan.benefits.map(benefit => (
-
-                                                        <li key={benefit.id}>
-
-                                                            {benefit.benefitName}
-                                                            :
-                                                            {" "}
-                                                            {benefit.benefitValue}
-
-                                                        </li>
-
-                                                    ))
-                                                }
-
-                                            </ul>
-
-                                            :
-
-                                            <p>
-                                                No benefits added.
+                                            <p className={styles.cardMeta}>
+                                                {plan.price} EGP
                                             </p>
 
-                                    }
+
+                                            <p className={styles.cardMeta}>
+                                                Duration:
+                                                {" "}
+                                                {plan.durationInDays} days
+                                            </p>
 
 
-                                </div>
+                                            <p className={styles.cardMeta}>
+                                                Freezes:
+                                                {" "}
+                                                {plan.freezeDays} days
+                                            </p>
 
-                            ))
+
+                                            <div className={styles.fieldLabel}>
+                                                Benefits
+                                            </div>
+
+
+                                            {
+                                                plan.benefits?.length > 0
+
+                                                    ?
+
+                                                    <ul>
+
+                                                        {
+                                                            plan.benefits.map(benefit => (
+
+                                                                <li key={benefit.id}>
+
+                                                                    {benefit.benefitName}
+                                                                    :
+                                                                    {" "}
+                                                                    {benefit.benefitValue}
+
+                                                                </li>
+
+                                                            ))
+                                                        }
+
+                                                    </ul>
+
+                                                    :
+
+                                                    <p>
+                                                        No benefits added.
+                                                    </p>
+
+                                            }
+
+
+                                            <div className={styles.cardActions}>
+
+                                                <button
+                                                    className={styles.cancelBtn}
+                                                    onClick={() =>
+                                                        handleDeletePlan(plan)
+                                                    }
+                                                    disabled={
+                                                        deletingId === plan.id
+                                                    }
+                                                >
+
+                                                    {
+                                                        deletingId === plan.id
+                                                            ?
+                                                            "Deleting..."
+                                                            :
+                                                            "Delete Plan"
+                                                    }
+
+                                                </button>
+
+                                            </div>
+
+
+                                        </div>
+
+                                    ))
+
+                                }
+
+                            </div>
 
                     }
 

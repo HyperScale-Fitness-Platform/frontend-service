@@ -3,13 +3,14 @@ import { useNavigate } from "react-router";
 import styles from "./CustomerHomePage.module.css";
 import { getCurrentMembership } from "../Membership/membershipApi";
 import { getCurrentOccupancy } from "../Occupancy/occupancyApi";
-import { getUserStatus, activateUser } from "./customerHomeApi";
+import { getUserStatus, activateUser, getCustomerProfile } from "./customerHomeApi";
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
 
   const [membership, setMembership] = useState(null);
   const [occupancy, setOccupancy] = useState(0);
+  const [customerName, setCustomerName] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Popup state
@@ -27,16 +28,20 @@ export default function CustomerHomePage() {
   async function loadData() {
     try {
       // Run independent requests in parallel to cut down network time
-      const [membershipData, occupancyData, statusData] = await Promise.all([
+      const [membershipData, occupancyData, statusData, profileData] = await Promise.all([
         getCurrentMembership().catch(() => null),
         getCurrentOccupancy().catch(() => ({ currentOccupancy: 0 })),
         userId
           ? getUserStatus(userId).catch(() => ({ is_active: true })) // default true so we don't trap users on error
-          : Promise.resolve({ is_active: true })
+          : Promise.resolve({ is_active: true }),
+        userId
+          ? getCustomerProfile(userId).catch(() => null)
+          : Promise.resolve(null)
       ]);
 
       setMembership(membershipData);
       setOccupancy(occupancyData.currentOccupancy);
+      setCustomerName(profileData?.full_name || "");
 
       if (statusData && statusData.is_active === false) {
         setShowPopup(true);
@@ -133,7 +138,7 @@ export default function CustomerHomePage() {
       <header className={styles.header}>
         <div>
           <p className={styles.eyebrow}>HyperScale Fitness Platform</p>
-          <h1>Welcome Back 👋</h1>
+          <h1>Welcome Back {customerName && `${customerName.toUpperCase()} `}👋</h1>
           <p className={styles.subtitle}>Manage your membership and gym activities.</p>
         </div>
       </header>

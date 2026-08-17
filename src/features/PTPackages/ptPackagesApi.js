@@ -29,6 +29,20 @@ export const getTrainers = async () => {
 
 
 
+// Get trainers that currently have open future slots
+export const getAvailableTrainers = async () => {
+
+    const response =
+        await apiGatewayClient.get(
+            "/operations/trainers/available"
+        );
+
+    return response.data;
+
+};
+
+
+
 // Purchase PT session offering
 export const purchasePtPackage = async (sessionId, trainerId) => {
 

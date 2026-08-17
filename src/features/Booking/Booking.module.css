@@ -101,6 +101,17 @@
 }
 
 
+.freeCount {
+
+    color:var(--muted);
+
+    font-size:14px;
+
+    margin:-5px 0 15px;
+
+}
+
+
 .sourceGroup {
 
     margin-bottom:35px;
@@ -115,6 +126,21 @@
     font-size:24px;
 
     margin:0 0 15px;
+
+}
+
+
+.packageLabel {
+
+    font-family:'Inter', sans-serif;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    color:var(--muted);
+
+    margin-left:6px;
 
 }
 

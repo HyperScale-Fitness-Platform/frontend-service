@@ -630,6 +630,19 @@
 }
 
 
+.noSlotsWarning {
+
+    color:#C0392B;
+
+    font-weight:600;
+
+    font-size:13px;
+
+    margin:-5px 0 15px;
+
+}
+
+
 .chooseButton {
 
     width:100%;

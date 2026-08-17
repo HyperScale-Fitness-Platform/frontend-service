@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import toast, { Toaster } from "react-hot-toast";
+import { useNavigate, useLocation } from "react-router";
+import toast from "react-hot-toast";
 
 import {
     getAllClasses,
     getClassSessions,
-    getTrainerSlots,
     getPackageAvailableSlots,
     getCustomerBookings,
+    getBookableSources,
+    getFreePtAvailability,
     bookClass,
     bookPtSessionViaMembership,
     bookPtSessionViaPackage,
@@ -16,7 +17,7 @@ import {
 } from "./bookingApi";
 
 import { getCurrentMembership } from "../Membership/membershipApi";
-import { getCustomerPackages } from "../PTPackages/ptPackagesApi";
+import { getCustomerPackages, getTrainers } from "../PTPackages/ptPackagesApi";
 
 import styles from "./Booking.module.css";
 
@@ -24,11 +25,17 @@ import styles from "./Booking.module.css";
 export default function Booking() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Which package the customer came from ("Book Session" on a specific
+    // package card). When set, the PT package section books with — and thus
+    // increments "Used" on — exactly that package.
+    const preselectedPkgId =
+        location.state?.ptPackageId;
 
     const [loading, setLoading] = useState(true);
 
     const [classes, setClasses] = useState([]);
-    const [trainerSlots, setTrainerSlots] = useState([]);
     const [packageSlots, setPackageSlots] = useState([]);
     const [bookings, setBookings] = useState([]);
 
@@ -41,6 +48,12 @@ export default function Booking() {
     const [reschedulingId, setReschedulingId] = useState(null);
     const [rescheduleSlotId, setRescheduleSlotId] = useState("");
 
+    const [trainerNameById, setTrainerNameById] = useState({});
+
+    const [freeCreditRemaining, setFreeCreditRemaining] = useState(null);
+
+    const [freeSlots, setFreeSlots] = useState([]);
+
 
     useEffect(() => {
 
@@ -49,36 +62,96 @@ export default function Booking() {
     }, []);
 
 
+    // Pick the package the "Use your PT Package" section books with.
+    // Prefers the package the customer clicked through from; falls back to
+    // the newest active package when arriving at /booking directly.
+    function pickActivePackage(packageList) {
+
+        const active = packageList.filter(
+            pkg =>
+                pkg.status === "ACTIVE" &&
+                pkg.sessionsTotal - pkg.sessionsUsed > 0
+        );
+
+        if (preselectedPkgId) {
+
+            const preselected =
+                active.find(
+                    pkg =>
+                        pkg.id === preselectedPkgId
+                );
+
+            if (preselected) {
+
+                return preselected;
+
+            }
+
+        }
+
+        return active[0] || null;
+
+    }
+
+
     async function loadData() {
 
         try {
 
             const [
                 classesData,
-                slotsData,
                 bookingsData,
                 membershipData,
                 packagesData,
+                sourcesData,
+                trainersData,
+                freeSlotsData,
             ] = await Promise.all([
                 getAllClasses(),
-                getTrainerSlots(),
                 getCustomerBookings(),
                 getCurrentMembership().catch(() => null),
                 getCustomerPackages().catch(() => []),
+                getBookableSources().catch(() => null),
+                getTrainers().catch(() => []),
+                getFreePtAvailability().catch(() => []),
             ]);
 
             setClasses(classesData);
-            setTrainerSlots(slotsData);
             setBookings(bookingsData);
             setMembership(membershipData);
             setPackages(packagesData);
+            setFreeSlots(
+                Array.isArray(freeSlotsData) ? freeSlotsData : []
+            );
+
+            const nameMap = {};
+
+            (Array.isArray(trainersData) ? trainersData : []).forEach(
+                trainer => {
+
+                    if (trainer?.id) {
+
+                        nameMap[trainer.id] =
+                            trainer.full_name;
+
+                    }
+
+                }
+            );
+
+            setTrainerNameById(nameMap);
+
+            const remaining =
+                sourcesData?.freeCredit?.remaining;
+
+            setFreeCreditRemaining(
+                typeof remaining === "number"
+                    ? remaining
+                    : null
+            );
 
             const activePkg =
-                packagesData.find(
-                    pkg =>
-                        pkg.status === "ACTIVE" &&
-                        pkg.sessionsTotal - pkg.sessionsUsed > 0
-                );
+                pickActivePackage(packagesData);
 
             if (activePkg) {
 
@@ -118,11 +191,20 @@ export default function Booking() {
         );
 
     const activePackage =
-        packages.find(
-            pkg =>
-                pkg.status === "ACTIVE" &&
-                pkg.sessionsTotal - pkg.sessionsUsed > 0
-        );
+        pickActivePackage(packages);
+
+
+    // Show ALL open slots so the customer can browse everything and pick
+    // from them -- the remaining credit is enforced by hiding the section
+    // once it hits 0 (the backend also rejects booking past the credit).
+    // If the remaining count is unknown (fetch failed), show NO slots
+    // rather than risk over-promising.
+    const membershipSlots =
+        typeof freeCreditRemaining === "number"
+        &&
+        freeCreditRemaining > 0
+            ? freeSlots
+            : [];
 
 
     // Bookings don't carry their own startTime -- the backend nests it under
@@ -200,6 +282,19 @@ export default function Booking() {
 
             loadData();
 
+            if (selectedClassId) {
+
+                const updatedSessions =
+                    await getClassSessions(selectedClassId);
+
+                setSessions(
+                    Array.isArray(updatedSessions)
+                        ? updatedSessions
+                        : []
+                );
+
+            }
+
         }
         catch (error) {
 
@@ -257,6 +352,19 @@ export default function Booking() {
             );
 
             loadData();
+
+            if (selectedClassId) {
+
+                const updatedSessions =
+                    await getClassSessions(selectedClassId);
+
+                setSessions(
+                    Array.isArray(updatedSessions)
+                        ? updatedSessions
+                        : []
+                );
+
+            }
 
         }
         catch (error) {
@@ -324,10 +432,6 @@ export default function Booking() {
 
         <div className={styles.page}>
 
-            <Toaster
-                position="top-center"
-            />
-
             <div className={styles.header}>
 
                 <p className={styles.eyebrow}>
@@ -355,7 +459,7 @@ export default function Booking() {
 
                 {
 
-                    bookings.filter(b => b.status !== "cancelled").length === 0
+                    bookings.filter(b => b.status !== "cancelled" && b.status !== "rescheduled").length === 0
 
                     ?
 
@@ -378,7 +482,7 @@ export default function Booking() {
                         {
 
                             bookings
-                                .filter(b => b.status !== "cancelled")
+                                .filter(b => b.status !== "cancelled" && b.status !== "rescheduled")
                                 .map(booking => (
 
                                 <div
@@ -433,7 +537,17 @@ export default function Booking() {
 
                                                                 {
 
-                                                                    trainerSlots.map(slot => (
+                                                                    (
+                                                                        booking.sourceType === "package"
+                                                                        ?
+                                                                        freeSlots.filter(
+                                                                            slot =>
+                                                                                slot.trainerId ===
+                                                                                booking.trainerId
+                                                                        )
+                                                                        :
+                                                                        freeSlots
+                                                                    ).map(slot => (
 
                                                                         <option
                                                                             key={slot.id}
@@ -465,9 +579,10 @@ export default function Booking() {
                                                         :
 
                                                         <button
-                                                            onClick={() =>
-                                                                setReschedulingId(booking.id)
-                                                            }
+                                                            onClick={() => {
+                                                                setReschedulingId(booking.id);
+                                                                setRescheduleSlotId("");
+                                                            }}
                                                         >
                                                             Reschedule
                                                         </button>
@@ -631,6 +746,25 @@ export default function Booking() {
 
                             <h3>
                                 Use your PT Package
+
+                                {
+                                    activePackage && (
+
+                                        <span className={styles.packageLabel}>
+
+                                            — {activePackage.packageType} Sessions
+
+                                            {
+                                                trainerNameById[activePackage.trainerId]
+                                                &&
+                                                ` with ${trainerNameById[activePackage.trainerId]} Coach`
+                                            }
+
+                                        </span>
+
+                                    )
+                                }
+
                             </h3>
 
                             {
@@ -665,7 +799,17 @@ export default function Booking() {
                                                 </h3>
 
                                                 <p>
-                                                    with your trainer
+                                                    {
+                                                        trainerNameById[slot.trainerId]
+
+                                                        ?
+
+                                                        `${trainerNameById[slot.trainerId]} Coach`
+
+                                                        :
+
+                                                        "with your trainer"
+                                                    }
                                                 </p>
 
                                                 <div className={styles.actions}>
@@ -709,8 +853,39 @@ export default function Booking() {
                             </h3>
 
                             {
+                                typeof freeCreditRemaining === "number"
+                                &&
+                                freeCreditRemaining > 0
+                                &&
 
-                                trainerSlots.length === 0
+                                <p className={styles.freeCount}>
+                                    You have {freeCreditRemaining} free PT{" "}
+                                    {freeCreditRemaining === 1 ? "session" : "sessions"} left
+                                </p>
+                            }
+
+                            {
+                                freeCreditRemaining === null
+
+                                ?
+
+                                <p className={styles.notice}>
+                                    Unable to load your free PT session allowance.
+                                </p>
+
+                                :
+
+                                freeCreditRemaining === 0
+
+                                ?
+
+                                <p className={styles.notice}>
+                                    You have no free PT sessions remaining
+                                </p>
+
+                                :
+
+                                membershipSlots.length === 0
 
                                 ?
 
@@ -724,7 +899,7 @@ export default function Booking() {
 
                                     {
 
-                                        trainerSlots.map(slot => (
+                                        membershipSlots.map(slot => (
 
                                             <div
                                                 key={slot.id}
@@ -740,7 +915,17 @@ export default function Booking() {
                                                 </h3>
 
                                                 <p>
-                                                    with your trainer
+                                                    {
+                                                        trainerNameById[slot.trainerId]
+
+                                                        ?
+
+                                                        `${trainerNameById[slot.trainerId]} Coach`
+
+                                                        :
+
+                                                        "with your trainer"
+                                                    }
                                                 </p>
 
                                                 <div className={styles.actions}>

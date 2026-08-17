@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../Payment/CheckoutForm";
 
 import {
     getCurrentMembership,
@@ -9,7 +12,19 @@ import {
     cancelFreeze
 } from "./membershipApi";
 
+import {
+    getMyPayments,
+    continuePayment
+} from "../Payment/paymentApi";
+
+import {
+    waitFor
+} from "../../utils/waitFor";
+
 import styles from "./ManageMembership.module.css";
+
+const stripePromise =
+    loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function getErrorMessage(error, fallback = "Something went wrong") {
     const message = error?.response?.data?.message;
@@ -34,6 +49,8 @@ export default function ManageMembership() {
     const [loading, setLoading] = useState(true);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [clientSecret, setClientSecret] = useState(null);
+    const [resuming, setResuming] = useState(false);
 
 
     useEffect(() => {
@@ -66,6 +83,117 @@ export default function ManageMembership() {
             setLoading(false);
 
         }
+
+    }
+
+
+    async function handleCompletePayment() {
+
+        if (!membership) return;
+
+        setResuming(true);
+
+        try {
+
+            const payments =
+                await getMyPayments();
+
+            const pendingPayment =
+                payments.find(
+                    payment =>
+                        payment.reference_type === "membership" &&
+                        String(payment.reference_id) === String(membership.id) &&
+                        (
+                            payment.status === "processing" ||
+                            payment.status === "pending" ||
+                            payment.status === "failed"
+                        )
+                );
+
+            if (!pendingPayment) {
+
+                toast.error(
+                    "No pending payment found for this membership"
+                );
+
+                return;
+
+            }
+
+            const result =
+                await continuePayment(
+                    pendingPayment.id
+                );
+
+            if (result.alreadyPaid) {
+
+                toast.success(
+                    "This membership was already paid"
+                );
+
+                loadMembership();
+
+                return;
+
+            }
+
+            setClientSecret(
+                result.clientSecret
+            );
+
+        }
+        catch (error) {
+
+            console.error(
+                "Resume payment error:",
+                error
+            );
+
+            toast.error(
+                error.response?.data?.error ||
+                error.response?.data?.message ||
+                "Unable to resume payment"
+            );
+
+        }
+        finally {
+
+            setResuming(false);
+
+        }
+
+    }
+
+
+    function handlePaymentSuccess() {
+
+        setClientSecret(null);
+
+        toast.success(
+            "Payment succeeded! Membership activated."
+        );
+
+        // The webhook → operations consumer activates the membership a
+        // moment after the card is confirmed. Poll until it flips to
+        // ACTIVE, then refresh in place.
+        waitFor(async () => {
+
+            if (!membership) return true;
+
+            const current =
+                await getCurrentMembership();
+
+            return (
+                current &&
+                current.id === membership.id &&
+                current.status === "ACTIVE"
+            );
+
+        }).then(() => {
+
+            loadMembership();
+
+        });
 
     }
 
@@ -478,9 +606,62 @@ export default function ManageMembership() {
                         }
 
 
+                        {
+                            membership.status === "PENDING_PAYMENT"
+
+                            &&
+
+                            <button
+                                className={styles.button}
+                                onClick={handleCompletePayment}
+                                disabled={resuming}
+                            >
+
+                                {
+                                    resuming
+                                        ?
+                                        "Loading..."
+                                        :
+                                        "Complete Payment"
+                                }
+
+                            </button>
+
+                        }
+
+
                     </div>
 
                 </div>
+
+
+                {
+                    clientSecret && (
+
+                        <div className={styles.card}>
+
+                            <h2>
+                                Complete Payment
+                            </h2>
+
+                            <p>
+                                Enter your card details to activate
+                                your membership.
+                            </p>
+
+                            <Elements stripe={stripePromise} options={{ clientSecret }}>
+
+                                <CheckoutForm
+                                    clientSecret={clientSecret}
+                                    onSuccess={handlePaymentSuccess}
+                                />
+
+                            </Elements>
+
+                        </div>
+
+                    )
+                }
 
 
 

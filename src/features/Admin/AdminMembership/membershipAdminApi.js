@@ -23,3 +23,13 @@ export async function addBenefit(planId, data) {
         data
     );
 }
+export async function deletePlan(planId) {
+
+    const response =
+        await apiGatewayClient.delete(
+            `/operations/plans/${planId}`
+        );
+
+    return response.data;
+
+}

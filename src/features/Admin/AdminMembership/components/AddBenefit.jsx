@@ -113,6 +113,10 @@ export default function AddBenefit({ plans, onAdded }) {
                         PT Sessions
                     </option>
 
+                    <option value="FULL_GYM_ACCESS">
+                        Full Gym Access
+                    </option>
+
                     <option value="GROUP_CLASSES">
                         Group Classes
                     </option>
@@ -123,6 +127,10 @@ export default function AddBenefit({ plans, onAdded }) {
 
                     <option value="SAUNA_ACCESS">
                         Sauna Access
+                    </option>
+
+                    <option value="WELCOME_GIFT">
+                        Welcome Gift
                     </option>
                 </select>
             </div>

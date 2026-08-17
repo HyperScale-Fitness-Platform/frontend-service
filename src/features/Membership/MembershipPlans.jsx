@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Payment/CheckoutForm";
@@ -12,8 +12,36 @@ import {
     getCurrentMembership,
 } from "./membershipApi";
 
+import {
+    waitFor
+} from "../../utils/waitFor";
+
 const stripePromise =
     loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
+// Friendly labels for each membership benefit type. Functions receive the
+// benefit value so count-based benefits render like "3 PT Sessions".
+const BENEFIT_LABELS = {
+
+    PT_SESSIONS: value =>
+        `${value} PT Session${value === 1 ? "" : "s"}`,
+
+    FULL_GYM_ACCESS: () =>
+        "Full Gym Access",
+
+    GROUP_CLASSES: value =>
+        `${value} Group Class${value === 1 ? "" : "es"}`,
+
+    LOCKER_ACCESS: () =>
+        "Locker Access",
+
+    SAUNA_ACCESS: () =>
+        "Sauna Access",
+
+    WELCOME_GIFT: () =>
+        "Welcome Gift",
+
+};
 
 export default function MembershipPlans() {
 
@@ -23,6 +51,7 @@ export default function MembershipPlans() {
     const [membership, setMembership] = useState(null);
     const [loading, setLoading] = useState(true);
     const [clientSecret, setClientSecret] = useState(null);
+    const [pendingMembershipId, setPendingMembershipId] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -59,6 +88,7 @@ export default function MembershipPlans() {
             const result = await subscribeToPlan(planId);
 
             if (result.clientSecret) {
+                setPendingMembershipId(result.membershipId ?? null);
                 setClientSecret(result.clientSecret);
             }
 
@@ -83,7 +113,29 @@ export default function MembershipPlans() {
             "Payment succeeded! Membership activated."
         );
 
-        loadData();
+        // The webhook → operations consumer activates the membership a
+        // moment after the card is confirmed. Poll until it flips to
+        // ACTIVE, then refresh in place — no page reload needed.
+        waitFor(async () => {
+
+            if (!pendingMembershipId) return true;
+
+            const current =
+                await getCurrentMembership();
+
+            return (
+                current &&
+                current.id === pendingMembershipId &&
+                current.status === "ACTIVE"
+            );
+
+        }).then(() => {
+
+            setPendingMembershipId(null);
+
+            loadData();
+
+        });
 
     }
     if (loading)
@@ -92,9 +144,6 @@ export default function MembershipPlans() {
     return (
 
         <div className={styles.page}>
-            <Toaster
-                position="top-center"
-            />
 
             <div className={styles.header}>
 
@@ -149,11 +198,36 @@ export default function MembershipPlans() {
 
                             <ul>
 
-                                <li>✓ Full Gym Access</li>
+                                <li>
+                                    ✓ Full Gym Access
+                                </li>
 
-                                <li>✓ Membership Benefits</li>
+                                {
+                                    plan.benefits?.length > 0
+                                    &&
+                                    plan.benefits.map(benefit => {
 
-                                <li>✓ Locker Access</li>
+                                        const label =
+                                            BENEFIT_LABELS[benefit.benefitName]
+                                                ?
+                                                BENEFIT_LABELS[benefit.benefitName](benefit.benefitValue)
+                                                :
+                                                benefit.benefitName;
+
+                                        return (
+
+                                            <li key={benefit.id}>
+                                                ✓ {label}
+                                            </li>
+
+                                        );
+
+                                    })
+                                }
+
+                                <li>
+                                    ✓ Freeze Up to {plan.freezeDays} Days
+                                </li>
 
                             </ul>
 

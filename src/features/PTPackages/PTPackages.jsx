@@ -22,6 +22,7 @@ import CheckoutForm
 import {
     getPtPackageTypes,
     getTrainers,
+    getAvailableTrainers,
     purchasePtPackage,
     getCustomerPackages,
     deletePendingPackage
@@ -138,6 +139,8 @@ export default function PTPackages(){
 
     const [purchasing,setPurchasing] = useState(null);
 
+    const [availableTrainerIds,setAvailableTrainerIds] = useState(null);
+
 
 
     useEffect(()=>{
@@ -167,6 +170,30 @@ export default function PTPackages(){
 
 
             setTrainers(availableTrainers);
+
+
+            try {
+
+                const trainersWithSlots =
+                    await getAvailableTrainers();
+
+
+                setAvailableTrainerIds(
+                    (
+                        Array.isArray(trainersWithSlots)
+                            ? trainersWithSlots
+                            : []
+                    )
+                        .map(t => t?.id)
+                        .filter(Boolean)
+                );
+
+            }
+            catch {
+
+                // Leave availableTrainerIds as null — no warnings shown.
+
+            }
 
 
 
@@ -388,7 +415,8 @@ export default function PTPackages(){
                         payment.reference_id === pkg.id &&
                         (
                             payment.status === "processing" ||
-                            payment.status === "pending"
+                            payment.status === "pending" ||
+                            payment.status === "failed"
                         )
                 );
 
@@ -738,13 +766,21 @@ export default function PTPackages(){
                                         )
                                     }
 
-                                    {
-                                        pkg.status === "ACTIVE" ? (
+{
+                                            pkg.status === "ACTIVE" ? (
 
                                             <button
                                                 className={styles.bookButton}
                                                 onClick={() =>
-                                                    navigate("/booking")
+                                                    navigate(
+                                                        "/booking",
+                                                        {
+                                                            state: {
+                                                                ptPackageId:
+                                                                    pkg.id
+                                                            }
+                                                        }
+                                                    )
                                                 }
                                             >
 
@@ -837,6 +873,23 @@ export default function PTPackages(){
                                             {trainer.bio}
 
                                         </p>
+
+
+                                        {
+                                            availableTrainerIds !== null
+
+                                            &&
+
+                                            !availableTrainerIds.includes(trainer.id)
+
+                                            &&
+
+                                            <p className={styles.noSlotsWarning}>
+
+                                                This trainer has no available slots for now
+
+                                            </p>
+                                        }
 
 
                                         <button

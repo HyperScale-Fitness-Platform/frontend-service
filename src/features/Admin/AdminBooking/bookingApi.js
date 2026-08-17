@@ -18,6 +18,10 @@ export function createPtSession(data) {
   return apiGatewayClient.post('/operations/pt-sessions', data);
 }
 
+export function getPtSessions() {
+  return apiGatewayClient.get('/operations/pt-sessions');
+}
+
 export function getTrainerSchedule(trainerId) {
   return apiGatewayClient.get(`/operations/trainers/${trainerId}/schedule`);
 }

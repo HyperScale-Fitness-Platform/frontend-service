@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import styles from './CustomerManagement.module.css';
 import apiGatewayClient from '../../../utils/api_getway';
 
@@ -122,8 +122,6 @@ export default function CustomerManagement() {
 
   return (
     <div className={styles.page}>
-      <Toaster position="top-center" reverseOrder={false} />
-
       <div className={styles.pageHeader}>
         <div>
           <p className={styles.eyebrow}>Admin · Customers</p>

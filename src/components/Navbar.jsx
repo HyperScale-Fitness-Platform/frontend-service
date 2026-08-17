@@ -1,4 +1,5 @@
 import { Link, NavLink, useNavigate, useLocation } from 'react-router';
+import toast from 'react-hot-toast';
 import styles from './Navbar.module.css';
 
 // Extracting route configs outside the component prevents array recreation on every render.
@@ -17,6 +18,7 @@ const ADMIN_TABS = [
   { to: '/admin/trainer', label: 'Trainer Management' },
   { to: '/admin/customer', label: 'Customer Management' },
   { to: '/admin/occupancy', label: 'Occupancy Management' },
+  { to: '/admin/threads', label: 'Threads Management' },
 ];
 
 export default function Navbar() {
@@ -32,6 +34,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('customerToken');
+    toast.dismiss();
     navigate('/login');
   };
 

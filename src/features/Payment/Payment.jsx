@@ -5,7 +5,7 @@ import {
 
 import { useNavigate } from "react-router";
 
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import {
     loadStripe
@@ -276,9 +276,6 @@ export default function Payment() {
 
         <div className={styles.page}>
 
-            <Toaster />
-
-
             <div className={styles.header}>
 
 
@@ -372,31 +369,41 @@ export default function Payment() {
                                     </div>
 
 
-                                    <div className={styles.actions}>
+                                    {
+                                        (
+                                            payment.status === "pending" ||
+                                            payment.status === "processing"
+                                        )
 
-                                        <button
-                                            className={styles.primaryButton}
-                                            onClick={() =>
-                                                handleContinue(payment.id)
-                                            }
-                                        >
+                                        &&
 
-                                            Continue
+                                        <div className={styles.actions}>
 
-                                        </button>
+                                            <button
+                                                className={styles.primaryButton}
+                                                onClick={() =>
+                                                    handleContinue(payment.id)
+                                                }
+                                            >
 
-                                        <button
-                                            className={styles.deleteButton}
-                                            onClick={() =>
-                                                handleDelete(payment.id)
-                                            }
-                                        >
+                                                Continue
 
-                                            Delete
+                                            </button>
 
-                                        </button>
+                                            <button
+                                                className={styles.deleteButton}
+                                                onClick={() =>
+                                                    handleDelete(payment.id)
+                                                }
+                                            >
 
-                                    </div>
+                                                Delete
+
+                                            </button>
+
+                                        </div>
+
+                                    }
 
 
                                 </div>

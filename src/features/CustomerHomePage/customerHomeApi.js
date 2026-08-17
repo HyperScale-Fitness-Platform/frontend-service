@@ -12,6 +12,11 @@ export const getUserStatus = async (userId) => {
   return response.data;
 };
 
+export const getCustomerProfile = async (userId) => {
+  const response = await apiGatewayClient.get(`/api/profiles/customers/${userId}`);
+  return response.data;
+};
+
 export const activateUser = async (userId, oldPassword, newPassword) => {
   const response = await apiGatewayClient.patch(`/auth/${userId}`, {
     is_active: true,

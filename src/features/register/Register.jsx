@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import styles from '../Login/Login.module.css';
 import apiGatewayClient from '../../utils/api_getway.js';
 import { Link, useNavigate } from 'react-router';
@@ -90,6 +90,7 @@ export default function Register() {
 
       toast.success("Account created successfully! Redirecting...");
       setTimeout(() => {
+        toast.dismiss();
         navigate('/login');
       }, 2000);
 
@@ -111,8 +112,6 @@ export default function Register() {
 
   return (
     <div className={styles.page}>
-      <Toaster position="top-center" reverseOrder={false} />
-
       <div className={styles.brandPanel}>
         <div className={styles.brandTop}>
           <div className={styles.logoMark}>P</div>

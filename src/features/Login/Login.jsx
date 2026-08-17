@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import styles from './Login.module.css';
 import apiGatewayClient from '../../utils/api_getway';
 import { jwtDecode } from 'jwt-decode';
@@ -60,6 +60,7 @@ export default function Login() {
       }
 
       setTimeout(() => {
+        toast.dismiss();
         navigate(destination, { replace: true });
       }, 1000);
 
@@ -79,8 +80,6 @@ export default function Login() {
 
   return (
     <div className={styles.page}>
-      <Toaster position="top-center" reverseOrder={false} />
-
       <div className={styles.brandPanel}>
         <div className={styles.brandTop}>
           <div className={styles.logoMark}>P</div>

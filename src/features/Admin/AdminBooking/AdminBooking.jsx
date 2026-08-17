@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { getClasses } from './bookingApi';
+import { getClasses, getPtSessions } from './bookingApi';
 import AdminCreateClass from './components/AdminCreateClass';
 import AdminScheduleSession from './components/AdminScheduleSession';
 import TrainerOpenSlot from './components/TrainerOpenSlot';
@@ -38,14 +38,21 @@ export default function AdminBooking() {
   const navigate = useNavigate();
   const [activePanel, setActivePanel] = useState(null);
   const [classes, setClasses] = useState([]);
+  const [ptSessions, setPtSessions] = useState([]);
 
   const loadClasses = async () => {
     const res = await getClasses();
     setClasses(res.data);
   };
 
+  const loadPtSessions = async () => {
+    const res = await getPtSessions();
+    setPtSessions(res.data);
+  };
+
   useEffect(() => {
     loadClasses();
+    loadPtSessions();
   }, []);
 
   return (
@@ -84,7 +91,22 @@ export default function AdminBooking() {
               <TrainerOpenSlot onOpened={() => {}} />
             )}
             {activePanel === 'pt-sessions' && (
-              <AdminCreatePtSession onCreated={() => {}} />
+              <>
+                <AdminCreatePtSession onCreated={loadPtSessions} />
+                {ptSessions.length > 0 && (
+                  <div className={styles.card}>
+                    <h3 className={styles.cardTitle}>Current PT Sessions</h3>
+                    <ul className={styles.list}>
+                      {ptSessions.map((s) => (
+                        <li key={s.id} className={styles.listItem}>
+                          <span>{s.name}</span>
+                          <span>{s.sessions} sessions · EGP {(s.priceCents / 100).toLocaleString()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

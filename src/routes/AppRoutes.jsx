@@ -17,6 +17,7 @@ import CustomerRoute from '../components/CustomerRoute';
 import AdminRoute from '../components/AdminRoute';
 import CustomerManagement from '../features/Admin/CustomerManagement/CustomerManagement';
 import AdminOccupancy from '../features/Admin/OccupancyManagement/OccupancyManagement';
+import ThreadsManagement from '../features/Admin/ThreadsManagement/ThreadsManagement';
 import Community from "../features/Community/Community";
 import Chat from "../features/Chat/Chat";
 import TrainerChats from "../features/Chat/TrainerChats";
@@ -195,6 +196,14 @@ export const router = createBrowserRouter([
                 element: (
                     <AdminRoute>
                         <AdminOccupancy />
+                    </AdminRoute>
+                ),
+            },
+            {
+                path: 'admin/threads',
+                element: (
+                    <AdminRoute>
+                        <ThreadsManagement />
                     </AdminRoute>
                 ),
             },
