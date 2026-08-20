@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { sendAIMessage } from './aiApi';
+import { sendAIMessage, getAIHistory } from './aiApi';
 import './AIAssistant.css';
 
 function getCustomerFromToken() {
@@ -130,6 +130,37 @@ export default function AIAssistant() {
     }
   }, []);
 
+
+  /*
+   * Load customer's previous AI conversation
+   * from the backend.
+   */
+  useEffect(() => {
+    if (!isCustomer) {
+      return;
+    }
+
+    const loadChatHistory = async () => {
+      try {
+        const data = await getAIHistory();
+
+        if (data.sessionId) {
+          setSessionId(data.sessionId);
+        }
+
+        if (Array.isArray(data.messages)) {
+          setMessages(data.messages);
+        }
+      } catch (error) {
+        console.error(
+          'Could not load AI chat history:',
+          error
+        );
+      }
+    };
+
+    loadChatHistory();
+  }, [isCustomer]);
 
   /*
    * Scroll automatically to the newest message.
@@ -301,11 +332,10 @@ export default function AIAssistant() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`ai-message-row ${
-                  msg.role === 'user'
+                className={`ai-message-row ${msg.role === 'user'
                     ? 'user-message-row'
                     : 'assistant-message-row'
-                }`}
+                  }`}
               >
 
                 {msg.role === 'assistant' && (
@@ -315,11 +345,10 @@ export default function AIAssistant() {
                 )}
 
                 <div
-                  className={`ai-message ${
-                    msg.role === 'user'
+                  className={`ai-message ${msg.role === 'user'
                       ? 'user-message'
                       : 'assistant-message'
-                  }`}
+                    }`}
                 >
                   {msg.content}
                 </div>
@@ -381,9 +410,8 @@ export default function AIAssistant() {
 
       {/* Floating Button */}
       <button
-        className={`ai-floating-button ${
-          isOpen ? 'ai-floating-button-open' : ''
-        }`}
+        className={`ai-floating-button ${isOpen ? 'ai-floating-button-open' : ''
+          }`}
         onClick={() => {
           setIsOpen((prev) => !prev);
           setShowHint(false);

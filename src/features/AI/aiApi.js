@@ -13,3 +13,11 @@ export const sendAIMessage = async ({ message, sessionId }) => {
 
   return response.data;
 };
+
+export const getAIHistory = async () => {
+  const response = await apiGatewayClient.get(
+    '/ai/history'
+  );
+
+  return response.data;
+};
