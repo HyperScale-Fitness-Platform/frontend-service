@@ -21,6 +21,8 @@ import ThreadsManagement from '../features/Admin/ThreadsManagement/ThreadsManage
 import Community from "../features/Community/Community";
 import Chat from "../features/Chat/Chat";
 import TrainerChats from "../features/Chat/TrainerChats";
+import Catalog from '../features/Catalog/Catalog';
+import ProductDetail from '../features/Catalog/ProductDetail';
 // import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 
 export const router = createBrowserRouter([
@@ -215,6 +217,25 @@ export const router = createBrowserRouter([
             //         </CustomerRoute>
             //     )
             // },
+
+            {
+                path: 'catalog',
+
+                element: (
+                    <CustomerRoute>
+                        <Catalog />
+                    </CustomerRoute>
+                ),
+            },
+            {
+                path: 'catalog/:productId',
+
+                element: (
+                    <CustomerRoute>
+                        <ProductDetail />
+                    </CustomerRoute>
+                ),
+            },
 
         ],
 
