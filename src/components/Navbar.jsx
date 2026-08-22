@@ -10,7 +10,9 @@ const CUSTOMER_TABS = [
   { to: '/occupancy', label: 'Occupancy' },
   { to: '/payments', label: 'Payments' },
   { to: '/community', label: 'Community' },
-  { to: '/catalog', label: 'Catalog' }
+  { to: '/catalog', label: 'Catalog' },
+  { to: '/cart', label: 'Cart' },
+  { to: '/orders', label: 'Orders' }
 ];
 
 const ADMIN_TABS = [
