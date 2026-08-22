@@ -1,0 +1,174 @@
+.card {
+  margin-top: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 22px;
+}
+
+.count {
+  padding: 6px 11px;
+  border-radius: 20px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.loading {
+  padding: 35px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty {
+  padding: 35px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty p {
+  margin: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  transition: border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.plan:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.planInfo {
+  min-width: 0;
+}
+
+.planInfo h3 {
+  margin: 0 0 6px;
+  color: #111827;
+  font-size: 16px;
+}
+
+.planInfo p {
+  margin: 0 0 6px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.planInfo span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.editButton,
+.deleteButton {
+  border-radius: 8px;
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.editButton {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.editButton:hover {
+  background: #f9fafb;
+}
+
+.deleteButton {
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  color: #dc2626;
+}
+
+.deleteButton:hover {
+  background: #fef2f2;
+}
+
+.errorBox {
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 650px) {
+  .card {
+    padding: 18px;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .plan {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+}

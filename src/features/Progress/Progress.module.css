@@ -1,0 +1,155 @@
+.page {
+  --bg: #fafaf7;
+  --panel: #f1f0ea;
+  --card: #ffffff;
+  --border: #e4e3dd;
+  --text: #16171a;
+  --muted: #6b6d72;
+  --accent: #8fbc3f;
+  --accent-dark: #6e9a2f;
+
+  min-height: 100vh;
+  background: var(--bg);
+
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 45px 0 70px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 8px;
+
+  color: var(--accent-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.pageHeader h1 {
+  margin: 0 0 8px;
+
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 54px;
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.pageHeader p {
+  max-width: 540px;
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.primaryButton {
+  flex-shrink: 0;
+
+  padding: 13px 20px;
+  border: none;
+  border-radius: 9px;
+
+  background: var(--text);
+  color: #ffffff;
+
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s,
+    background 0.15s;
+}
+
+.primaryButton:hover {
+  background: #2a2b2f;
+  transform: translateY(-1px);
+}
+
+.errorBox {
+  margin-bottom: 22px;
+  padding: 13px 15px;
+
+  border: 1px solid #f2c5c1;
+  border-radius: 9px;
+
+  background: #fff2f1;
+  color: #b42318;
+
+  font-size: 13px;
+}
+
+.overview {
+  margin-bottom: 24px;
+}
+
+.history {
+  margin-top: 24px;
+}
+
+.formSection {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.formTop {
+  margin-bottom: 14px;
+}
+
+.backButton {
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: var(--muted);
+
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.backButton:hover {
+  color: var(--accent-dark);
+}
+
+@media (max-width: 700px) {
+  .container {
+    width: min(100% - 30px, 1180px);
+    padding-top: 30px;
+  }
+
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pageHeader h1 {
+    font-size: 46px;
+  }
+
+  .primaryButton {
+    width: 100%;
+  }
+}

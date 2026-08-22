@@ -1,0 +1,249 @@
+.card {
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.loading {
+  padding: 35px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty {
+  padding: 35px 20px;
+  text-align: center;
+}
+
+.empty .eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.empty h2 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 24px;
+}
+
+.empty p {
+  margin: 0 auto 20px;
+  max-width: 500px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.primaryButton {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 18px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  opacity: 0.9;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 25px;
+}
+
+.header p {
+  margin: 7px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.editButton,
+.deleteButton {
+  border-radius: 8px;
+  padding: 8px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.editButton {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.editButton:hover {
+  background: #f9fafb;
+}
+
+.deleteButton {
+  border: 1px solid #fecaca;
+  background: #ffffff;
+  color: #dc2626;
+}
+
+.deleteButton:hover {
+  background: #fef2f2;
+}
+
+.notes {
+  margin-bottom: 24px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.notes strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #374151;
+  font-size: 13px;
+}
+
+.notes p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.exerciseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.exerciseHeader h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+}
+
+.exerciseHeader span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.exerciseList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exercise {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 11px;
+}
+
+.exerciseNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.exerciseInfo {
+  min-width: 0;
+  flex: 1;
+}
+
+.exerciseInfo h4 {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 15px;
+}
+
+.exerciseInfo p {
+  margin: 0 0 8px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stats span {
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.exerciseInfo small {
+  display: block;
+  margin-top: 8px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+@media (max-width: 650px) {
+  .card {
+    padding: 18px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+
+  .exerciseHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

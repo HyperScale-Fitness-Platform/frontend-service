@@ -1,0 +1,230 @@
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  opacity: .6;
+}
+
+.header h2 {
+  margin: 6px 0;
+}
+
+.header p {
+  margin: 0;
+  opacity: .7;
+}
+
+.section {
+  padding: 22px 0;
+  border-top: 1px solid #eee;
+}
+
+.section:first-of-type {
+  border-top: none;
+}
+
+.sectionTitle {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.input,
+.field input,
+.field select,
+.section textarea,
+.foodRow input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  padding: 11px 12px;
+  font: inherit;
+  background: #fff;
+}
+
+.section textarea {
+  resize: vertical;
+}
+
+.inputWrap .input {
+  padding-right: 55px;
+}
+
+.suffix {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  opacity: .55;
+}
+
+.inputError {
+  border-color: #dc2626 !important;
+}
+
+.fieldError {
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.exerciseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.exerciseHeader p {
+  margin: 5px 0 0;
+  opacity: .65;
+}
+
+.addButton {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 9px;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+.mealCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.mealHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.mealHeader h3 {
+  margin: 0;
+}
+
+.removeButton {
+  border: none;
+  background: transparent;
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.foodSection {
+  margin: 12px 0 18px;
+}
+
+.foodHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.foodHeader label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.foodHeader button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.foodRow {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.foodRow button {
+  border: none;
+  background: transparent;
+  color: #dc2626;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 20px;
+}
+
+.cancel,
+.cancelTop {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 9px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.submit {
+  background: #111;
+  color: #fff;
+}
+
+.errorBox {
+  padding: 13px;
+  border-radius: 9px;
+  background: #fee2e2;
+  color: #991b1b;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header,
+  .exerciseHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

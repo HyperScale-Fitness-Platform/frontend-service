@@ -28,6 +28,7 @@ import Cart from '../features/Order/Cart';
 import OrderHistory from '../features/Order/OrderHistory';
 import OrderDetail from '../features/Order/OrderDetail';
 // import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
+import Progress from '../features/Progress/Progress';
 
 export const router = createBrowserRouter([
 
@@ -136,6 +137,15 @@ export const router = createBrowserRouter([
                 element: (
                     <CustomerRoute>
                         <Payment />
+                    </CustomerRoute>
+                ),
+            },
+            {
+                path: 'progress',
+
+                element: (
+                    <CustomerRoute>
+                        <Progress />
                     </CustomerRoute>
                 ),
             },

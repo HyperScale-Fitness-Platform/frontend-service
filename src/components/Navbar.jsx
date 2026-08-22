@@ -12,7 +12,8 @@ const CUSTOMER_TABS = [
   { to: '/community', label: 'Community' },
   { to: '/catalog', label: 'Catalog' },
   { to: '/cart', label: 'Cart' },
-  { to: '/orders', label: 'Orders' }
+  { to: '/orders', label: 'Orders' },
+  { to: '/progress', label: 'Progress' }
 ];
 
 const ADMIN_TABS = [

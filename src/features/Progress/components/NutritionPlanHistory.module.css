@@ -1,0 +1,104 @@
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  opacity: .6;
+}
+
+.header h2 {
+  margin: 6px 0 0;
+}
+
+.count {
+  opacity: .6;
+  font-size: 13px;
+}
+
+.loading,
+.empty {
+  padding: 30px;
+  text-align: center;
+  opacity: .65;
+}
+
+.plan {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 0;
+  border-top: 1px solid #eee;
+}
+
+.planInfo h3 {
+  margin: 0 0 6px;
+}
+
+.planInfo p {
+  margin: 0 0 9px;
+  opacity: .65;
+  font-size: 13px;
+}
+
+.details {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  opacity: .65;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.editButton,
+.deleteButton {
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.editButton {
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.deleteButton {
+  border: none;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.errorBox {
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 9px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 700px) {
+  .plan {
+    flex-direction: column;
+  }
+
+  .actions {
+    align-self: flex-start;
+  }
+}
