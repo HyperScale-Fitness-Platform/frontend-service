@@ -24,6 +24,9 @@ import TrainerChats from "../features/Chat/TrainerChats";
 import Catalog from '../features/Catalog/Catalog';
 import ProductDetail from '../features/Catalog/ProductDetail';
 import AdminCatalog from '../features/Catalog/AdminCatalog';
+import Cart from '../features/Order/Cart';
+import OrderHistory from '../features/Order/OrderHistory';
+import OrderDetail from '../features/Order/OrderDetail';
 // import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 
 export const router = createBrowserRouter([
@@ -242,6 +245,36 @@ export const router = createBrowserRouter([
                 element: (
                     <CustomerRoute>
                         <ProductDetail />
+                    </CustomerRoute>
+                ),
+            },
+
+            {
+                path: 'cart',
+
+                element: (
+                    <CustomerRoute>
+                        <Cart />
+                    </CustomerRoute>
+                ),
+            },
+
+            {
+                path: 'orders',
+
+                element: (
+                    <CustomerRoute>
+                        <OrderHistory />
+                    </CustomerRoute>
+                ),
+            },
+
+            {
+                path: 'orders/:orderId',
+
+                element: (
+                    <CustomerRoute>
+                        <OrderDetail />
                     </CustomerRoute>
                 ),
             },
