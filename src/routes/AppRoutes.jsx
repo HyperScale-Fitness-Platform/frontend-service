@@ -29,6 +29,7 @@ import OrderHistory from '../features/Order/OrderHistory';
 import OrderDetail from '../features/Order/OrderDetail';
 // import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 import Progress from '../features/Progress/Progress';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 export const router = createBrowserRouter([
 
@@ -105,6 +106,15 @@ export const router = createBrowserRouter([
                     <CustomerRoute>
                         <TrainerChats />
                     </CustomerRoute>
+                ),
+            },
+
+            {
+                path: "community",
+                element: (
+                    <ProtectedRoute>
+                        <Community />
+                    </ProtectedRoute>
                 ),
             },
 
