@@ -9,7 +9,8 @@ const CUSTOMER_TABS = [
   { to: '/membership', label: 'Membership' },
   { to: '/occupancy', label: 'Occupancy' },
   { to: '/payments', label: 'Payments' },
-  { to: '/community', label: 'Community' }
+  { to: '/community', label: 'Community' },
+  { to: '/catalog', label: 'Catalog' }
 ];
 
 const ADMIN_TABS = [
@@ -19,6 +20,7 @@ const ADMIN_TABS = [
   { to: '/admin/customer', label: 'Customer Management' },
   { to: '/admin/occupancy', label: 'Occupancy Management' },
   { to: '/admin/threads', label: 'Threads Management' },
+  { to: '/admin/catalog', label: 'Products' },
 ];
 
 export default function Navbar() {

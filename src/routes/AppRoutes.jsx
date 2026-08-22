@@ -23,6 +23,7 @@ import Chat from "../features/Chat/Chat";
 import TrainerChats from "../features/Chat/TrainerChats";
 import Catalog from '../features/Catalog/Catalog';
 import ProductDetail from '../features/Catalog/ProductDetail';
+import AdminCatalog from '../features/Catalog/AdminCatalog';
 // import CommunityModeration from "../features/Admin/CommunityModeration/CommunityModeration";
 
 export const router = createBrowserRouter([
@@ -206,6 +207,14 @@ export const router = createBrowserRouter([
                 element: (
                     <AdminRoute>
                         <ThreadsManagement />
+                    </AdminRoute>
+                ),
+            },
+            {
+                path: 'admin/catalog',
+                element: (
+                    <AdminRoute>
+                        <AdminCatalog />
                     </AdminRoute>
                 ),
             },

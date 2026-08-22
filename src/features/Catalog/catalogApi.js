@@ -1,6 +1,8 @@
 import apiGatewayClient from "../../utils/api_getway";
 
-const CATALOG_BASE = "/catalog";
+// The API gateway exposes the catalog service under /commerce.
+// `/catalog` is reserved for the client-side page route.
+const CATALOG_BASE = "/commerce";
 
 export const getCatalogProducts = async (params = {}) => {
   const response = await apiGatewayClient.get(`${CATALOG_BASE}/api/products`, {
