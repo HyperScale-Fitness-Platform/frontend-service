@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import progressApi from "../progressApi";
 
+import TrainerBadge from "./TrainerBadge";
+
 import styles from "./NutritionPlanHistory.module.css";
 
 function NutritionPlanHistory({
@@ -104,6 +106,14 @@ function NutritionPlanHistory({
               <div className={styles.planInfo}>
                 <h3>
                   {record.plan_name}
+
+                  {record.generated_by === "trainer" && (
+                    <TrainerBadge variant="trainer" />
+                  )}
+
+                  {record.generated_by === "ai" && (
+                    <TrainerBadge variant="ai" />
+                  )}
                 </h3>
 
                 <p>
@@ -146,42 +156,46 @@ function NutritionPlanHistory({
                 </div>
               </div>
 
-              <div className={styles.actions}>
-                <button
-                  type="button"
-                  className={
-                    styles.editButton
-                  }
-                  onClick={() => {
-                    setActionError("");
+              {(onEdit || onDelete) && (
+                <div className={styles.actions}>
+                  {onEdit && (
+                    <button
+                      type="button"
+                      className={
+                        styles.editButton
+                      }
+                      onClick={() => {
+                        setActionError("");
 
-                    if (onEdit) {
-                      onEdit(record);
-                    }
-                  }}
-                >
-                  Edit
-                </button>
+                        onEdit(record);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
 
-                <button
-                  type="button"
-                  className={
-                    styles.deleteButton
-                  }
-                  onClick={() =>
-                    handleDelete(record)
-                  }
-                  disabled={
-                    deletingId ===
-                    record.id
-                  }
-                >
-                  {deletingId ===
-                  record.id
-                    ? "Deleting..."
-                    : "Delete"}
-                </button>
-              </div>
+                  {onDelete && (
+                    <button
+                      type="button"
+                      className={
+                        styles.deleteButton
+                      }
+                      onClick={() =>
+                        handleDelete(record)
+                      }
+                      disabled={
+                        deletingId ===
+                        record.id
+                      }
+                    >
+                      {deletingId ===
+                      record.id
+                        ? "Deleting..."
+                        : "Delete"}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

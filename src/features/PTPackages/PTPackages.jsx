@@ -7,9 +7,7 @@ import { useNavigate } from "react-router";
 
 import toast from "react-hot-toast";
 
-import {
-    loadStripe
-} from "@stripe/stripe-js";
+import { stripePromise } from "../../utils/stripe";
 
 import {
     Elements
@@ -47,10 +45,7 @@ from "../../utils/waitFor";
 import styles from "./PTPackages.module.css";
 
 
-const stripePromise =
-    loadStripe(
-        import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-    );
+
 
 
 

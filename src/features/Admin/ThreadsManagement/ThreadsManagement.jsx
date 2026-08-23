@@ -5,6 +5,7 @@ import {
   adminDeleteThread,
   adminDeleteComment
 } from './threadsAdminApi';
+import socket, { connectSocket } from '../../Community/socket';
 import styles from './ThreadsManagement.module.css';
 
 function formatDate(value) {
@@ -32,6 +33,42 @@ export default function ThreadsManagement() {
 
   useEffect(() => {
     loadThreads();
+  }, []);
+
+  /*
+   * Live updates: the social service broadcasts thread events
+   * to every connected client, so keep the admin list in sync
+   * without a manual refresh button.
+   */
+  useEffect(() => {
+    connectSocket();
+
+    function threadCreated(thread) {
+      setThreads((prev) => {
+        if (prev.some((t) => t.id === thread.id)) return prev;
+        return [thread, ...prev];
+      });
+    }
+
+    function threadUpdated(updatedThread) {
+      setThreads((prev) =>
+        prev.map((t) => (t.id === updatedThread.id ? updatedThread : t))
+      );
+    }
+
+    function threadDeleted(data) {
+      setThreads((prev) => prev.filter((t) => t.id !== data.id));
+    }
+
+    socket.on('thread:created', threadCreated);
+    socket.on('thread:updated', threadUpdated);
+    socket.on('thread:deleted', threadDeleted);
+
+    return () => {
+      socket.off('thread:created', threadCreated);
+      socket.off('thread:updated', threadUpdated);
+      socket.off('thread:deleted', threadDeleted);
+    };
   }, []);
 
   const handleDeleteThread = async (thread) => {
@@ -77,11 +114,8 @@ export default function ThreadsManagement() {
           <div>
             <div className={styles.eyebrow}>Community Moderation</div>
             <h1 className={styles.pageTitle}>Threads</h1>
-            <p className={styles.pageSub}>Review every thread and its discussions. Delete whole threads or individual comments.</p>
+            <p className={styles.pageSub}>Review every thread and its discussions. Delete whole threads or individual comments. Updates live.</p>
           </div>
-          <button className={styles.refreshBtn} onClick={loadThreads}>
-            ↻ Refresh
-          </button>
         </div>
 
         <div className={styles.listSection}>

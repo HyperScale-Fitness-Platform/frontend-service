@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "../../utils/stripe";
 import CheckoutForm from "../Payment/CheckoutForm";
 
 import {
@@ -23,8 +23,6 @@ import {
 
 import styles from "./ManageMembership.module.css";
 
-const stripePromise =
-    loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function getErrorMessage(error, fallback = "Something went wrong") {
     const message = error?.response?.data?.message;

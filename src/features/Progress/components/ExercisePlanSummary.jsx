@@ -1,4 +1,5 @@
 import styles from "./ExercisePlanSummary.module.css";
+import TrainerBadge from "./TrainerBadge";
 
 function ExercisePlanSummary({
   plan,
@@ -28,18 +29,10 @@ function ExercisePlanSummary({
           <h2>No Exercise Plan Yet</h2>
 
           <p>
-            Create an exercise plan to start
-            tracking your workouts.
+            Your trainer will create an exercise
+            plan for you after you purchase a PT
+            package.
           </p>
-
-          {onAddNew && (
-            <button
-              className={styles.primaryButton}
-              onClick={onAddNew}
-            >
-              + Create Exercise Plan
-            </button>
-          )}
         </div>
       </section>
     );
@@ -53,7 +46,17 @@ function ExercisePlanSummary({
             CURRENT PLAN
           </span>
 
-          <h2>{plan.plan_name}</h2>
+          <h2>
+            {plan.plan_name}
+
+            {plan.source === "trainer" && (
+              <TrainerBadge variant="trainer" />
+            )}
+
+            {plan.source === "ai" && (
+              <TrainerBadge variant="ai" />
+            )}
+          </h2>
 
           <p>
             {formatDate(plan.start_date)}

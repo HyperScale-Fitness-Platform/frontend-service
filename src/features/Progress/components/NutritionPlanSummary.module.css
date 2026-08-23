@@ -34,7 +34,7 @@
 
 .primaryButton {
   border: none;
-  background: #111;
+  background: #8fbc3f;
   color: #fff;
   border-radius: 9px;
   padding: 11px 16px;
@@ -72,6 +72,12 @@
 .editButton {
   border: 1px solid #d1d5db;
   background: #fff;
+  color: #16171a;
+  font-weight: 600;
+}
+
+.editButton:hover {
+  background: #f9fafb;
 }
 
 .deleteButton {

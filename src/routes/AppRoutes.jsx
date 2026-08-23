@@ -21,6 +21,8 @@ import ThreadsManagement from '../features/Admin/ThreadsManagement/ThreadsManage
 import Community from "../features/Community/Community";
 import Chat from "../features/Chat/Chat";
 import TrainerChats from "../features/Chat/TrainerChats";
+import TrainerPlans from "../features/TrainerPlans/TrainerPlans";
+import AIPlans from "../features/AIPlans/AIPlans";
 import Catalog from '../features/Catalog/Catalog';
 import ProductDetail from '../features/Catalog/ProductDetail';
 import AdminCatalog from '../features/Catalog/AdminCatalog';
@@ -100,11 +102,31 @@ export const router = createBrowserRouter([
                 ),
             },
             {
+                path: 'ai-plans',
+
+                element: (
+                    <CustomerRoute>
+                        <AIPlans />
+                    </CustomerRoute>
+                ),
+            },
+
+            {
                 path: 'trainer/chats',
 
                 element: (
                     <CustomerRoute>
                         <TrainerChats />
+                    </CustomerRoute>
+                ),
+            },
+
+            {
+                path: 'trainer/plans',
+
+                element: (
+                    <CustomerRoute>
+                        <TrainerPlans />
                     </CustomerRoute>
                 ),
             },

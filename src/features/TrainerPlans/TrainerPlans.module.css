@@ -1,0 +1,213 @@
+.page {
+    min-height: 100vh;
+    background: #FAFAF7;
+    padding: 40px;
+    color: #16171A;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header {
+    background: #FFFFFF;
+    border: 1px solid #E4E3DD;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.eyebrow {
+    color: #8FBC3F;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0 0 8px;
+}
+
+.title {
+    margin: 0;
+    font: 40px 'Bebas Neue', sans-serif;
+}
+
+.subtitle {
+    margin: 8px 0 0;
+    color: #6B6D72;
+}
+
+.backButton {
+    border: none;
+    background: none;
+    color: #6B6D72;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 14px;
+}
+
+.backButton:hover {
+    color: #16171A;
+}
+
+.customerList {
+    background: #FFFFFF;
+    border: 1px solid #E4E3DD;
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.customerCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    padding: 18px;
+    border: 1px solid #E4E3DD;
+    border-radius: 14px;
+    background: #FFFFFF;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.customerCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatarPlaceholder {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #8FBC3F;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.profileInfo h3 {
+    color: #16171A;
+    margin: 0 0 5px;
+    font-size: 18px;
+}
+
+.profileInfo span {
+    color: #6B6D72;
+    font-size: 13px;
+}
+
+.statusPill {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #F1F0EA;
+    color: #6B6D72;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.statusActive {
+    background: rgba(143, 188, 63, 0.15);
+    color: #6E9A2F;
+}
+
+.empty {
+    height: 300px;
+    background: #FFFFFF;
+    border: 1px solid #E4E3DD;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.empty h3 {
+    margin-bottom: 5px;
+}
+
+.empty p {
+    color: #6B6D72;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sectionEyebrow {
+    display: block;
+    color: #8FBC3F;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.sectionHeader h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.primaryButton {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 20px;
+    background: #8FBC3F;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.primaryButton:hover {
+    background: #6E9A2F;
+}
+
+.status {
+    padding: 40px;
+    text-align: center;
+    color: #6B6D72;
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding: 20px;
+    }
+
+    .sectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -5,6 +5,14 @@ const socket = io("http://localhost:4003", {
     autoConnect: false,
 });
 
+/*
+ * Returns the userId the socket is currently
+ * authenticated as (from socket.auth), or null.
+ */
+function currentSocketUserId() {
+    return socket.auth?.userId || null;
+}
+
 export function connectSocket() {
 
     const currentUser = getCurrentUser();
@@ -16,6 +24,22 @@ export function connectSocket() {
         return;
     }
 
+    /*
+     * If the socket is already connected as a DIFFERENT
+     * user (account switched without a page reload),
+     * drop the stale connection first — otherwise every
+     * message would be sent under the old identity.
+     */
+    if (
+        currentSocketUserId() &&
+        currentSocketUserId() !== currentUser.id
+    ) {
+        console.log(
+            "Socket identity changed, reconnecting..."
+        );
+        socket.disconnect();
+    }
+
     socket.auth = {
         userId: currentUser.id,
         role: currentUser.role,
@@ -24,6 +48,16 @@ export function connectSocket() {
     if (!socket.connected) {
         socket.connect();
     }
+}
+
+export function disconnectSocket() {
+    if (socket.connected) {
+        socket.disconnect();
+    }
+
+    // Clear the stored identity so a later
+    // connectSocket() can never reuse it.
+    socket.auth = null;
 }
 
 

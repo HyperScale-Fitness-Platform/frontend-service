@@ -122,9 +122,15 @@
 .addButton {
   border: 1px solid #d1d5db;
   background: #fff;
+  color: #16171a;
+  font-weight: 600;
   border-radius: 9px;
   padding: 9px 13px;
   cursor: pointer;
+}
+
+.addButton:hover {
+  background: #f9fafb;
 }
 
 .mealCard {
@@ -199,14 +205,31 @@
 .cancelTop {
   border: 1px solid #d1d5db;
   background: #fff;
+  color: #16171a;
+  font-weight: 600;
   border-radius: 9px;
   padding: 10px 15px;
   cursor: pointer;
 }
 
+.cancel:hover,
+.cancelTop:hover {
+  background: #f9fafb;
+}
+
 .submit {
-  background: #111;
-  color: #fff;
+  border: none;
+  border-radius: 9px;
+  padding: 11px 20px;
+  background: #8fbc3f;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background: #6e9a2f;
 }
 
 .errorBox {

@@ -10,7 +10,7 @@ import ThreadCard from "./components/ThreadCard";
 import ThreadDetail from "./components/ThreadDetail";
 
 import styles from "./Community.module.css";
-import socket from "./socket";
+import socket, { connectSocket } from "./socket";
 
 export default function Community() {
 
@@ -51,6 +51,14 @@ export default function Community() {
     }, []);
     // 2. Real-time Socket.IO updates
     useEffect(() => {
+
+        /*
+         * App.jsx only attempts to connect at bundle load,
+         * usually before login. Reconnect here so customers
+         * receive live thread events (created/updated/deleted).
+         * connectSocket is idempotent.
+         */
+        connectSocket();
 
         function threadCreated(thread) {
 

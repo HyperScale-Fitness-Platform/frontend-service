@@ -1,4 +1,5 @@
 import styles from "./NutritionPlanSummary.module.css";
+import TrainerBadge from "./TrainerBadge";
 
 function NutritionPlanSummary({
   plan,
@@ -28,18 +29,10 @@ function NutritionPlanSummary({
           <h2>No Nutrition Plan Yet</h2>
 
           <p>
-            Create a nutrition plan to start
-            tracking your nutrition.
+            Your trainer will create a nutrition
+            plan for you after you purchase a PT
+            package.
           </p>
-
-          {onAddNew && (
-            <button
-              className={styles.primaryButton}
-              onClick={onAddNew}
-            >
-              + Create Nutrition Plan
-            </button>
-          )}
         </div>
       </section>
     );
@@ -53,7 +46,17 @@ function NutritionPlanSummary({
             CURRENT PLAN
           </span>
 
-          <h2>{plan.plan_name}</h2>
+          <h2>
+            {plan.plan_name}
+
+            {plan.generated_by === "trainer" && (
+              <TrainerBadge variant="trainer" />
+            )}
+
+            {plan.generated_by === "ai" && (
+              <TrainerBadge variant="ai" />
+            )}
+          </h2>
 
           <p>
             {formatDate(plan.start_date)}

@@ -1,6 +1,8 @@
 import { Link, NavLink, useNavigate, useLocation } from 'react-router';
 import toast from 'react-hot-toast';
 import styles from './Navbar.module.css';
+import { getCurrentUser } from '../utils/auth';
+import { disconnectSocket } from '../features/Community/socket';
 
 // Extracting route configs outside the component prevents array recreation on every render.
 const CUSTOMER_TABS = [
@@ -13,7 +15,13 @@ const CUSTOMER_TABS = [
   { to: '/catalog', label: 'Catalog' },
   { to: '/cart', label: 'Cart' },
   { to: '/orders', label: 'Orders' },
+  { to: '/ai-plans', label: 'AI Plans' },
   { to: '/progress', label: 'Progress' }
+];
+
+const TRAINER_TABS = [
+  { to: '/trainer/chats', label: 'Chats' },
+  { to: '/trainer/plans', label: 'Plans' }
 ];
 
 const ADMIN_TABS = [
@@ -31,14 +39,19 @@ export default function Navbar() {
   const location = useLocation();
 
   const isAdminRoute = location.pathname.startsWith('/admin');
-  
+  const isTrainerRoute = location.pathname.startsWith('/trainer');
+
   // Note: Reading from localStorage during render isn't reactive. 
   // If the token changes in another tab, the Navbar won't update until a hard refresh.
   // Consider moving this to a React Context or an event listener for production.
   const isLoggedIn = !!localStorage.getItem('customerToken');
+  const userRole = getCurrentUser()?.role;
 
   const handleLogout = () => {
     localStorage.removeItem('customerToken');
+    // Drop the socket identity so the next login
+    // never reuses the previous account's connection.
+    disconnectSocket();
     toast.dismiss();
     navigate('/login');
   };
@@ -58,6 +71,20 @@ export default function Navbar() {
               to={tab.to}
               // 'end' prevents '/admin' from being incorrectly marked active when at '/admin/trainer'
               end={tab.to === '/admin'} 
+              className={({ isActive }) =>
+                isActive ? `${styles.adminTab} ${styles.adminTabActive}` : styles.adminTab
+              }
+            >
+              {tab.label}
+            </NavLink>
+          ))}
+        </div>
+      ) : isTrainerRoute || userRole === 'trainer' ? (
+        <div className={styles.adminTabs}>
+          {TRAINER_TABS.map((tab) => (
+            <NavLink
+              key={tab.to}
+              to={tab.to}
               className={({ isActive }) =>
                 isActive ? `${styles.adminTab} ${styles.adminTabActive}` : styles.adminTab
               }

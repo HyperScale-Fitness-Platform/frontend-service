@@ -99,8 +99,8 @@
 }
 
 .input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #8fbc3f;
+  box-shadow: 0 0 0 3px rgba(143, 188, 63, 0.18);
 }
 
 .inputError {
@@ -132,8 +132,8 @@
 }
 
 .field textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  border-color: #8fbc3f;
+  box-shadow: 0 0 0 3px rgba(143, 188, 63, 0.18);
 }
 
 .fieldError {
@@ -222,7 +222,7 @@
   border: none;
   border-radius: 9px;
   padding: 11px 20px;
-  background: #2563eb;
+  background: #8fbc3f;
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;

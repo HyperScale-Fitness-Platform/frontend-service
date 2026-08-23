@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 
 import progressApi from "../progressApi";
 
-import NutritionPlanForm from "./NutritionPlanForm";
-import NutritionPlanEditForm from "./NutritionPlanEditForm";
 import NutritionPlanSummary from "./NutritionPlanSummary";
 import NutritionPlanHistory from "./NutritionPlanHistory";
 
 import styles from "./NutritionPlan.module.css";
 
+/*
+ * Read-only view of the customer's nutrition plans.
+ * Plans are created and managed by the customer's
+ * personal trainer from the trainer Plans page.
+ */
 function NutritionPlan() {
   const [latest, setLatest] = useState(null);
   const [history, setHistory] = useState([]);
@@ -17,9 +20,6 @@ function NutritionPlan() {
   const [loadingHistory, setLoadingHistory] = useState(true);
 
   const [pageError, setPageError] = useState("");
-
-  const [showForm, setShowForm] = useState(false);
-  const [editingPlan, setEditingPlan] = useState(null);
 
   const customerId = localStorage.getItem("userId");
 
@@ -41,9 +41,6 @@ function NutritionPlan() {
     setLoadingHistory(true);
 
     try {
-      /*
-       * Latest nutrition plan
-       */
       try {
         const latestResult =
           await progressApi.getLatestNutritionPlan(
@@ -68,9 +65,6 @@ function NutritionPlan() {
         setLoadingLatest(false);
       }
 
-      /*
-       * Nutrition plan history
-       */
       try {
         const historyResult =
           await progressApi.getNutritionPlanHistory(
@@ -113,104 +107,6 @@ function NutritionPlan() {
     loadNutritionPlans();
   }, [customerId]);
 
-  /*
-   * CREATE
-   */
-  function handleCreated(plan) {
-    setLatest(plan);
-
-    setHistory((previous) => {
-      const withoutDuplicate = previous.filter(
-        (item) => item.id !== plan.id
-      );
-
-      return [plan, ...withoutDuplicate];
-    });
-
-    setShowForm(false);
-  }
-
-  /*
-   * UPDATE
-   */
-  function handleUpdated(updatedPlan) {
-    setLatest((previous) => {
-      if (previous?.id === updatedPlan.id) {
-        return updatedPlan;
-      }
-
-      return previous;
-    });
-
-    setHistory((previous) =>
-      previous.map((plan) =>
-        plan.id === updatedPlan.id
-          ? updatedPlan
-          : plan
-      )
-    );
-
-    setEditingPlan(null);
-  }
-
-  /*
-   * DELETE
-   */
-  async function handleDelete(plan) {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${plan.plan_name}"?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await progressApi.deleteNutritionPlan(
-        plan.id
-      );
-
-      setHistory((previous) =>
-        previous.filter(
-          (item) => item.id !== plan.id
-        )
-      );
-
-      /*
-       * Reload latest because the deleted
-       * plan may have been the latest one.
-       */
-      try {
-        const latestResult =
-          await progressApi.getLatestNutritionPlan(
-            customerId
-          );
-
-        setLatest(latestResult);
-      } catch (error) {
-        if (error?.response?.status === 404) {
-          setLatest(null);
-        } else {
-          throw error;
-        }
-      }
-    } catch (error) {
-      console.error(
-        "Failed to delete nutrition plan:",
-        error
-      );
-
-      setPageError(
-        error?.response?.data?.message ||
-          "Failed to delete the nutrition plan."
-      );
-    }
-  }
-
-  async function handleHistoryChanged() {
-    await loadNutritionPlans();
-  }
-
   return (
     <section className={styles.container}>
       <div className={styles.header}>
@@ -227,15 +123,6 @@ function NutritionPlan() {
             macronutrient targets.
           </p>
         </div>
-
-        {!showForm && !editingPlan && (
-          <button
-            className={styles.primaryButton}
-            onClick={() => setShowForm(true)}
-          >
-            + Add Nutrition Plan
-          </button>
-        )}
       </div>
 
       {pageError && (
@@ -244,44 +131,15 @@ function NutritionPlan() {
         </div>
       )}
 
-      {showForm && (
-        <NutritionPlanForm
-          onCreated={handleCreated}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
+      <NutritionPlanSummary
+        plan={latest}
+        loading={loadingLatest}
+      />
 
-      {editingPlan && (
-        <NutritionPlanEditForm
-          record={editingPlan}
-          onCancel={() => setEditingPlan(null)}
-          onUpdated={handleUpdated}
-        />
-      )}
-
-      {!showForm && !editingPlan && (
-        <>
-          <NutritionPlanSummary
-            plan={latest}
-            loading={loadingLatest}
-            onAddNew={() => setShowForm(true)}
-            onEdit={(plan) =>
-              setEditingPlan(plan)
-            }
-            onDelete={handleDelete}
-          />
-
-          <NutritionPlanHistory
-            records={history}
-            loading={loadingHistory}
-            onEdit={(plan) =>
-              setEditingPlan(plan)
-            }
-            onDelete={handleDelete}
-            onChanged={handleHistoryChanged}
-          />
-        </>
-      )}
+      <NutritionPlanHistory
+        records={history}
+        loading={loadingHistory}
+      />
     </section>
   );
 }

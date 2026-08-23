@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { stripePromise } from "../../utils/stripe";
 import CheckoutForm from "../Payment/CheckoutForm";
 import styles from "./MembershipPlans.module.css";
 
@@ -16,8 +16,6 @@ import {
     waitFor
 } from "../../utils/waitFor";
 
-const stripePromise =
-    loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 // Friendly labels for each membership benefit type. Functions receive the
 // benefit value so count-based benefits render like "3 PT Sessions".

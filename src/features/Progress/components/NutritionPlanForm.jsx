@@ -7,6 +7,7 @@ import styles from "./NutritionPlanForm.module.css";
 function NutritionPlanForm({
   onCreated,
   onCancel,
+  targetCustomerId,
 }) {
   const [form, setForm] = useState({
     plan_name: "",
@@ -348,6 +349,10 @@ function NutritionPlanForm({
 
     return {
       id: planId,
+
+      ...(targetCustomerId
+        ? { customer_id: targetCustomerId }
+        : {}),
 
       plan_name: form.plan_name.trim(),
 

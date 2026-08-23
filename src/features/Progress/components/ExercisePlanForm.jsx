@@ -1,8 +1,14 @@
 import { useState } from "react";
 import progressApi from "../progressApi";
+import {
+    MUSCLE_GROUPS,
+    getExercisesForGroup,
+} from "./exerciseCatalog";
 import styles from "./ExercisePlanForm.module.css";
 
-function ExercisePlanForm({ onCreated, onCancel }) {
+const CUSTOM_OPTION = "__custom__";
+
+function ExercisePlanForm({ onCreated, onCancel, targetCustomerId }) {
     const [form, setForm] = useState({
         plan_name: "",
         start_date: "",
@@ -18,6 +24,8 @@ function ExercisePlanForm({ onCreated, onCancel }) {
             sets: 3,
             reps: 10,
             notes: "",
+            muscle_group: "",
+            selection_mode: "",
         },
     ]);
 
@@ -61,6 +69,72 @@ function ExercisePlanForm({ onCreated, onCancel }) {
         setSubmitError("");
     }
 
+    function handleMuscleGroupChange(index, group) {
+        setExercises((previous) =>
+            previous.map((exercise, exerciseIndex) => {
+                if (exerciseIndex !== index) {
+                    return exercise;
+                }
+
+                if (group === CUSTOM_OPTION) {
+                    return {
+                        ...exercise,
+                        muscle_group: group,
+                        selection_mode: CUSTOM_OPTION,
+                        exercise_name: "",
+                        machine_name: "",
+                    };
+                }
+
+                return {
+                    ...exercise,
+                    muscle_group: group,
+                    selection_mode: "",
+                    exercise_name: "",
+                    machine_name: "",
+                };
+            })
+        );
+
+        setErrors((previous) => ({
+            ...previous,
+            [`exercise_${index}_exercise_name`]: "",
+            [`exercise_${index}_machine_name`]: "",
+        }));
+
+        setSubmitError("");
+    }
+
+    function handleCatalogExerciseChange(index, exerciseName) {
+        const selected = getExercisesForGroup(
+            exercises[index].muscle_group
+        ).find((item) => item.exercise === exerciseName);
+
+        if (!selected) {
+            return;
+        }
+
+        setExercises((previous) =>
+            previous.map((exercise, exerciseIndex) =>
+                exerciseIndex === index
+                    ? {
+                        ...exercise,
+                        exercise_name: selected.exercise,
+                        machine_name: selected.machine,
+                    }
+                    : exercise
+            )
+        );
+
+        setErrors((previous) => ({
+            ...previous,
+            [`exercise_${index}_exercise_name`]: "",
+            [`exercise_${index}_machine_name`]: "",
+        }));
+
+        setSubmitError("");
+    }
+
     function addExercise() {
         setExercises((previous) => [
             ...previous,
@@ -71,6 +145,8 @@ function ExercisePlanForm({ onCreated, onCancel }) {
                 sets: 3,
                 reps: 10,
                 notes: "",
+                muscle_group: "",
+                selection_mode: "",
             },
         ]);
     }
@@ -114,6 +190,12 @@ function ExercisePlanForm({ onCreated, onCancel }) {
         }
 
         exercises.forEach((exercise, index) => {
+            if (!exercise.muscle_group) {
+                newErrors[
+                    `exercise_${index}_muscle_group`
+                ] = "Muscle group is required";
+            }
+
             if (!exercise.exercise_name.trim()) {
                 newErrors[
                     `exercise_${index}_exercise_name`
@@ -187,6 +269,10 @@ function ExercisePlanForm({ onCreated, onCancel }) {
 
     function buildPayload() {
   return {
+    ...(targetCustomerId
+      ? { customer_id: targetCustomerId }
+      : {}),
+
     plan_name: form.plan_name.trim(),
 
     start_date: form.start_date,
@@ -409,47 +495,179 @@ function ExercisePlanForm({ onCreated, onCancel }) {
                                 </div>
 
                                 <div className={styles.grid}>
-                                    <Field
-                                        label="Exercise Name"
-                                        value={
-                                            exercise.exercise_name
-                                        }
-                                        onChange={(event) =>
-                                            handleExerciseChange(
-                                                index,
-                                                "exercise_name",
-                                                event.target.value
-                                            )
-                                        }
-                                        error={
-                                            errors[
-                                            `exercise_${index}_exercise_name`
-                                            ]
-                                        }
-                                        type="text"
-                                        placeholder="e.g. Bench Press"
-                                    />
+                                    <div className={styles.field}>
+                                        <label>
+                                            Muscle Group
+                                        </label>
 
-                                    <Field
-                                        label="Machine Name"
-                                        value={
-                                            exercise.machine_name
-                                        }
-                                        onChange={(event) =>
-                                            handleExerciseChange(
-                                                index,
-                                                "machine_name",
-                                                event.target.value
-                                            )
-                                        }
-                                        error={
-                                            errors[
-                                            `exercise_${index}_machine_name`
-                                            ]
-                                        }
-                                        type="text"
-                                        placeholder="e.g. Chest Press Machine"
-                                    />
+                                        <select
+                                            className={styles.input}
+                                            value={
+                                                exercise.muscle_group
+                                            }
+                                            onChange={(event) =>
+                                                handleMuscleGroupChange(
+                                                    index,
+                                                    event.target.value
+                                                )
+                                            }
+                                            disabled={loading}
+                                        >
+                                            <option value="">
+                                                Select muscle group...
+                                            </option>
+
+                                            {MUSCLE_GROUPS.map((group) => (
+                                                <option
+                                                    key={group}
+                                                    value={group}
+                                                >
+                                                    {group}
+                                                </option>
+                                            ))}
+
+                                            <option value={CUSTOM_OPTION}>
+                                                Custom (type manually)
+                                            </option>
+                                        </select>
+
+                                        {errors[
+                                            `exercise_${index}_muscle_group`
+                                        ] && (
+                                                <span
+                                                    className={
+                                                        styles.fieldError
+                                                    }
+                                                >
+                                                    {
+                                                        errors[
+                                                        `exercise_${index}_muscle_group`
+                                                        ]
+                                                    }
+                                                </span>
+                                            )}
+                                    </div>
+
+                                    {exercise.selection_mode ===
+                                        CUSTOM_OPTION ? (
+                                        <>
+                                            <Field
+                                                label="Exercise Name"
+                                                value={
+                                                    exercise.exercise_name
+                                                }
+                                                onChange={(event) =>
+                                                    handleExerciseChange(
+                                                        index,
+                                                        "exercise_name",
+                                                        event.target.value
+                                                    )
+                                                }
+                                                error={
+                                                    errors[
+                                                    `exercise_${index}_exercise_name`
+                                                    ]
+                                                }
+                                                type="text"
+                                                placeholder="e.g. Bench Press"
+                                            />
+
+                                            <Field
+                                                label="Machine Name"
+                                                value={
+                                                    exercise.machine_name
+                                                }
+                                                onChange={(event) =>
+                                                    handleExerciseChange(
+                                                        index,
+                                                        "machine_name",
+                                                        event.target.value
+                                                    )
+                                                }
+                                                error={
+                                                    errors[
+                                                    `exercise_${index}_machine_name`
+                                                    ]
+                                                }
+                                                type="text"
+                                                placeholder="e.g. Chest Press Machine"
+                                            />
+                                        </>
+                                    ) : (
+                                        <div className={styles.field}>
+                                            <label>
+                                                Exercise / Machine
+                                            </label>
+
+                                            <select
+                                                className={styles.input}
+                                                value={
+                                                    exercises[index]
+                                                        .exercise_name
+                                                }
+                                                onChange={(event) =>
+                                                    handleCatalogExerciseChange(
+                                                        index,
+                                                        event.target.value
+                                                    )
+                                                }
+                                                disabled={
+                                                    loading ||
+                                                    !exercise.muscle_group
+                                                }
+                                            >
+                                                <option value="">
+                                                    {!exercise.muscle_group
+                                                        ? "Choose a muscle group first..."
+                                                        : "Select exercise..."}
+                                                </option>
+
+                                                {getExercisesForGroup(
+                                                    exercise.muscle_group
+                                                ).map((item) => (
+                                                    <option
+                                                        key={item.exercise}
+                                                        value={item.exercise}
+                                                    >
+                                                        {item.exercise}
+                                                    </option>
+                                                ))}
+                                            </select>
+
+                                            {(errors[
+                                                `exercise_${index}_exercise_name`
+                                            ] ||
+                                                errors[
+                                                `exercise_${index}_machine_name`
+                                                ]) && (
+                                                    <span
+                                                        className={
+                                                            styles.fieldError
+                                                        }
+                                                    >
+                                                        {
+                                                            errors[
+                                                            `exercise_${index}_exercise_name`
+                                                            ]
+                                                        }
+                                                    </span>
+                                                )}
+
+                                            {exercises[index].machine_name && (
+                                                <span
+                                                    className={
+                                                        styles.machineHint
+                                                    }
+                                                >
+                                                    Equipment:{" "}
+                                                    {
+                                                        exercises[index]
+                                                            .machine_name
+                                                    }
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
 
                                     <Field
                                         label="Weight"
