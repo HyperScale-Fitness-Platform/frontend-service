@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styles from "./CustomerHomePage.module.css";
-import { getCurrentMembership } from "../Membership/membershipApi";
-import { getCurrentOccupancy } from "../Occupancy/occupancyApi";
-import { getUserStatus, activateUser, getCustomerProfile } from "./customerHomeApi";
+
+import {
+  getCurrentMembership,
+} from "../Membership/membershipApi";
+
+import {
+  getCurrentOccupancy,
+} from "../Occupancy/occupancyApi";
+
+import {
+  getUserStatus,
+  activateUser,
+  getCustomerProfile,
+} from "./customerHomeApi";
+
+import ProgressSnapshot from "./components/ProgressSnapshot/ProgressSnapshot";
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
@@ -13,9 +26,14 @@ export default function CustomerHomePage() {
   const [customerName, setCustomerName] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Popup state
   const [showPopup, setShowPopup] = useState(false);
-  const [passwords, setPasswords] = useState({ old: "", new: "", confirm: "" });
+
+  const [passwords, setPasswords] = useState({
+    old: "",
+    new: "",
+    confirm: "",
+  });
+
   const [popupError, setPopupError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,23 +45,46 @@ export default function CustomerHomePage() {
 
   async function loadData() {
     try {
-      // Run independent requests in parallel to cut down network time
-      const [membershipData, occupancyData, statusData, profileData] = await Promise.all([
+      const [
+        membershipData,
+        occupancyData,
+        statusData,
+        profileData,
+      ] = await Promise.all([
         getCurrentMembership().catch(() => null),
-        getCurrentOccupancy().catch(() => ({ currentOccupancy: 0 })),
+
+        getCurrentOccupancy().catch(() => ({
+          currentOccupancy: 0,
+        })),
+
         userId
-          ? getUserStatus(userId).catch(() => ({ is_active: true })) // default true so we don't trap users on error
-          : Promise.resolve({ is_active: true }),
+          ? getUserStatus(userId).catch(() => ({
+              is_active: true,
+            }))
+          : Promise.resolve({
+              is_active: true,
+            }),
+
         userId
           ? getCustomerProfile(userId).catch(() => null)
-          : Promise.resolve(null)
+          : Promise.resolve(null),
       ]);
 
       setMembership(membershipData);
-      setOccupancy(occupancyData.currentOccupancy);
-      setCustomerName(profileData?.full_name || "");
 
-      if (statusData && statusData.is_active === false) {
+      setOccupancy(
+        occupancyData?.currentOccupancy ??
+          occupancyData?.occupancy ??
+          0
+      );
+
+      setCustomerName(
+        profileData?.full_name ||
+          profileData?.name ||
+          ""
+      );
+
+      if (statusData?.is_active === false) {
         setShowPopup(true);
       }
     } finally {
@@ -53,6 +94,7 @@ export default function CustomerHomePage() {
 
   async function handlePasswordChange(e) {
     e.preventDefault();
+
     setPopupError("");
 
     if (passwords.new !== passwords.confirm) {
@@ -61,163 +103,385 @@ export default function CustomerHomePage() {
     }
 
     if (passwords.new.length < 6) {
-      setPopupError("Password must be at least 6 characters.");
+      setPopupError(
+        "Password must be at least 6 characters."
+      );
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      await activateUser(userId, passwords.old, passwords.new);
+      await activateUser(
+        userId,
+        passwords.old,
+        passwords.new
+      );
+
       setShowPopup(false);
     } catch (err) {
-      setPopupError(err.response?.data?.message || "Failed to update password. Check old password.");
+      setPopupError(
+        err.response?.data?.message ||
+          "Failed to update password. Check your old password."
+      );
     } finally {
       setIsSubmitting(false);
     }
   }
 
   if (loading) {
-    return <div className={styles.loading}>Loading dashboard...</div>;
+    return (
+      <div className={styles.loadingPage}>
+        <div className={styles.loadingMark}>H</div>
+        <span>Preparing your dashboard...</span>
+      </div>
+    );
   }
+
+  const firstName = customerName
+    ? customerName.trim().split(" ")[0]
+    : "there";
+
+  const membershipActive =
+    membership &&
+    String(membership.status).toLowerCase() ===
+      "active";
 
   return (
     <div className={styles.page}>
-      {/* PASSWORD CHANGE POPUP */}
+      {/* PASSWORD POPUP */}
       {showPopup && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
-            <h2>Update Password</h2>
-            <p>Your account is inactive. Please set a new password to continue.</p>
-            
-            {popupError && <div className={styles.errorText}>{popupError}</div>}
+            <div className={styles.modalBadge}>
+              ACCOUNT SECURITY
+            </div>
+
+            <h2>Update your password</h2>
+
+            <p>
+              Your account needs to be activated before
+              you can continue using the platform.
+            </p>
+
+            {popupError && (
+              <div className={styles.errorText}>
+                {popupError}
+              </div>
+            )}
 
             <form onSubmit={handlePasswordChange}>
               <div className={styles.inputGroup}>
-                <label>Old Password</label>
+                <label>Current password</label>
+
                 <input
                   type="password"
                   required
                   value={passwords.old}
-                  onChange={(e) => setPasswords({ ...passwords, old: e.target.value })}
+                  onChange={(e) =>
+                    setPasswords({
+                      ...passwords,
+                      old: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <label>New Password</label>
+                <label>New password</label>
+
                 <input
                   type="password"
                   required
                   value={passwords.new}
-                  onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
+                  onChange={(e) =>
+                    setPasswords({
+                      ...passwords,
+                      new: e.target.value,
+                    })
+                  }
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <label>Rewrite Password</label>
+                <label>Confirm password</label>
+
                 <input
                   type="password"
                   required
                   value={passwords.confirm}
-                  onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
+                  onChange={(e) =>
+                    setPasswords({
+                      ...passwords,
+                      confirm: e.target.value,
+                    })
+                  }
                 />
               </div>
 
-              <button 
-                type="submit" 
-                className={styles.button} 
+              <button
+                type="submit"
+                className={styles.button}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Updating..." : "Update Password"}
+                {isSubmitting
+                  ? "Updating..."
+                  : "Activate account"}
               </button>
             </form>
           </div>
         </div>
       )}
 
-      <header className={styles.header}>
-        <div>
-          <p className={styles.eyebrow}>HyperScale Fitness Platform</p>
-          <h1>Welcome Back {customerName && `${customerName.toUpperCase()} `}👋</h1>
-          <p className={styles.subtitle}>Manage your membership and gym activities.</p>
-        </div>
-      </header>
+      {/* HERO */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <div className={styles.eyebrow}>
+            <span />
+            HYPERSCALE FITNESS PLATFORM
+          </div>
 
-      <div className={styles.grid}>
-        <div className={styles.card}>
-          <h2>Current Membership</h2>
+          <h1>
+            Welcome back,
+            <br />
+            <strong>{firstName}</strong>
+          </h1>
+
+          <p>
+            Your fitness journey, membership and
+            progress — all in one place.
+          </p>
+        </div>
+
+        <div className={styles.heroVisual}>
+          <div className={styles.heroRing}>
+            <span>H</span>
+          </div>
+
+          <div className={styles.heroLine} />
+        </div>
+      </section>
+
+      {/* OVERVIEW */}
+      <section className={styles.overview}>
+        {/* MEMBERSHIP */}
+        <article className={styles.membershipCard}>
+          <div className={styles.cardTop}>
+            <span className={styles.cardLabel}>
+              MEMBERSHIP
+            </span>
+
+            <span
+              className={
+                membershipActive
+                  ? styles.statusActive
+                  : styles.statusInactive
+              }
+            >
+              <span />
+              {membershipActive
+                ? "ACTIVE"
+                : "INACTIVE"}
+            </span>
+          </div>
+
           {membership ? (
             <>
-              <h3>{membership.plan.name}</h3>
-              <span className={styles.active}>{membership.status}</span>
-              <p>
-                Ends
-                <br />
-                {new Date(membership.endDate).toLocaleDateString()}
-              </p>
+              <h2>
+                {membership.plan?.name ||
+                  membership.planName ||
+                  "Current Plan"}
+              </h2>
+
+              <div className={styles.membershipDetails}>
+                <div>
+                  <span>STATUS</span>
+                  <strong>
+                    {membership.status}
+                  </strong>
+                </div>
+
+                <div>
+                  <span>ENDS</span>
+                  <strong>
+                    {membership.endDate
+                      ? new Date(
+                          membership.endDate
+                        ).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
+                      : "—"}
+                  </strong>
+                </div>
+              </div>
+
               <button
-                className={styles.button}
-                onClick={() => navigate("/manage-membership")}
+                className={styles.darkButton}
+                onClick={() =>
+                  navigate("/manage-membership")
+                }
               >
-                Manage Membership
+                Manage membership
+                <span>→</span>
               </button>
             </>
           ) : (
             <>
-              <h3>No Active Membership</h3>
-              <p>Subscribe to unlock all gym services.</p>
+              <h2>No active membership</h2>
+
+              <p className={styles.cardDescription}>
+                Choose a membership plan and unlock
+                the full gym experience.
+              </p>
+
               <button
-                className={styles.button}
-                onClick={() => navigate("/membership")}
+                className={styles.darkButton}
+                onClick={() =>
+                  navigate("/membership")
+                }
               >
-                Browse Plans
+                Browse plans
+                <span>→</span>
               </button>
             </>
           )}
-        </div>
+        </article>
 
-        <div className={styles.card}>
-          <h2>Gym Occupancy</h2>
-          <div className={styles.live}>
-            <span className={styles.dot}></span>
-            LIVE
+        {/* OCCUPANCY */}
+        <article className={styles.occupancyCard}>
+          <div className={styles.cardTop}>
+            <span className={styles.cardLabel}>
+              GYM OCCUPANCY
+            </span>
+
+            <span className={styles.liveBadge}>
+              <span />
+              LIVE
+            </span>
           </div>
-          <div className={styles.count}>{occupancy}</div>
-          <p>Members currently inside</p>
-          <button
-            className={styles.button}
-            onClick={() => navigate("/occupancy")}
-          >
-            Go to Occupancy
-          </button>
-        </div>
-      </div>
 
-      <div className={styles.card}>
-        <h2>Quick Actions</h2>
+          <div className={styles.occupancyNumber}>
+            {occupancy}
+          </div>
+
+          <p>members currently inside</p>
+
+          <button
+            className={styles.lightButton}
+            onClick={() =>
+              navigate("/occupancy")
+            }
+          >
+            View live occupancy
+            <span>→</span>
+          </button>
+        </article>
+      </section>
+
+      {/* PROGRESS */}
+      <ProgressSnapshot />
+
+      {/* QUICK ACTIONS */}
+      <section className={styles.quickSection}>
+        <div className={styles.sectionHeading}>
+          <div>
+            <span>EXPLORE</span>
+            <h2>Quick actions</h2>
+          </div>
+
+          <p>
+            Everything you need to keep your training
+            moving forward.
+          </p>
+        </div>
+
         <div className={styles.actions}>
           <button
-            className={styles.secondaryButton}
-            onClick={() => navigate("/membership")}
+            className={styles.actionCard}
+            onClick={() =>
+              navigate("/booking")
+            }
           >
-            Browse Membership Plans
+            <div className={styles.actionIcon}>
+              01
+            </div>
+
+            <div>
+              <strong>Book a class</strong>
+              <span>
+                Reserve your next gym session
+              </span>
+            </div>
+
+            <b>↗</b>
           </button>
+
           <button
-            className={styles.secondaryButton}
-            onClick={() => navigate("/booking")}
+            className={styles.actionCard}
+            onClick={() =>
+              navigate("/membership")
+            }
           >
-            Booking
+            <div className={styles.actionIcon}>
+              02
+            </div>
+
+            <div>
+              <strong>Membership plans</strong>
+              <span>
+                Explore plans and benefits
+              </span>
+            </div>
+
+            <b>↗</b>
           </button>
+
           <button
-            className={styles.secondaryButton}
-            onClick={() => navigate("/pt-packages")}
+            className={styles.actionCard}
+            onClick={() =>
+              navigate("/pt-packages")
+            }
           >
-            Personal Training
-            <br />
-            Packages
+            <div className={styles.actionIcon}>
+              03
+            </div>
+
+            <div>
+              <strong>Personal training</strong>
+              <span>
+                Find the right PT package
+              </span>
+            </div>
+
+            <b>↗</b>
+          </button>
+
+          <button
+            className={styles.actionCard}
+            onClick={() =>
+              navigate("/ai-plans")
+            }
+          >
+            <div className={styles.actionIcon}>
+              AI
+            </div>
+
+            <div>
+              <strong>AI fitness plans</strong>
+              <span>
+                Build a smarter training routine
+              </span>
+            </div>
+
+            <b>↗</b>
           </button>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

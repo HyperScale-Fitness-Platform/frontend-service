@@ -1,0 +1,678 @@
+.section {
+  margin-top: 20px;
+
+  padding: 30px;
+
+  border-radius: 22px;
+
+  background: #16171a;
+  color: white;
+
+  overflow: hidden;
+
+  position: relative;
+
+  box-shadow: 0 18px 45px rgba(22, 23, 26, 0.1);
+}
+
+.section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 400px;
+  height: 400px;
+
+  right: -180px;
+  top: -200px;
+
+  border: 1px solid rgba(143, 188, 63, 0.14);
+
+  border-radius: 50%;
+}
+
+.heading {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+
+  margin-bottom: 25px;
+}
+
+.eyebrow {
+  color: #8fbc3f;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.heading h2 {
+  margin: 5px 0 4px;
+
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 38px;
+  font-weight: 400;
+}
+
+.heading p {
+  margin: 0;
+
+  color: #85878a;
+
+  font-size: 11px;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  padding: 11px 14px;
+
+  border: 1px solid #393a3e;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.viewButton:hover {
+  background: #ffffff;
+  color: #16171a;
+}
+
+/* METRICS */
+
+.metrics {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 8px;
+
+  margin-bottom: 8px;
+}
+
+.metric {
+  padding: 19px;
+
+  border-radius: 13px;
+
+  background: #222327;
+
+  border: 1px solid #2d2e32;
+}
+
+.metricTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  color: #8c8e91;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.metricTop i {
+  width: 25px;
+  height: 25px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 7px;
+
+  font-style: normal;
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.iconweight {
+  background: #e9f3d8;
+  color: #6e9630;
+}
+
+.iconfat {
+  background: #efe8d8;
+  color: #9a7c3c;
+}
+
+.iconmuscle {
+  background: #e1ebf1;
+  color: #52758c;
+}
+
+.iconscore {
+  background: #e9e5f1;
+  color: #74658e;
+}
+
+.metricValue {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+
+  margin-top: 18px;
+}
+
+.metricValue strong {
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 34px;
+  font-weight: 400;
+}
+
+.metricValue small {
+  color: #85878a;
+
+  font-size: 9px;
+}
+
+.change,
+.first {
+  margin-top: 7px;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.good {
+  color: #9acb4b;
+}
+
+.bad {
+  color: #d7837a;
+}
+
+.neutral {
+  color: #898b8f;
+}
+
+.first {
+  color: #77797c;
+}
+
+/* CHART */
+
+.chartCard {
+  position: relative;
+  z-index: 2;
+
+  padding: 22px;
+
+  border-radius: 13px;
+
+  background: #222327;
+
+  border: 1px solid #2d2e32;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  margin-bottom: 15px;
+}
+
+.chartHeader > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chartHeader span {
+  color: #7f8185;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.chartHeader strong {
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.chartHeader small {
+  color: #85878a;
+
+  font-family: Inter, sans-serif;
+  font-size: 9px;
+}
+
+.lastTest {
+  text-align: right;
+}
+
+.lastTest strong {
+  color: #b1b3b4;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 10px;
+}
+
+.chartWrapper {
+  width: 100%;
+}
+
+.chart {
+  width: 100%;
+  height: 180px;
+
+  overflow: visible;
+}
+
+.gridLine {
+  stroke: #343539;
+  stroke-width: 1;
+}
+
+.area {
+  fill: rgba(143, 188, 63, 0.08);
+}
+
+.line {
+  fill: none;
+
+  stroke: #8fbc3f;
+  stroke-width: 3;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.point {
+  fill: #16171a;
+
+  stroke: #a4d255;
+  stroke-width: 3;
+}
+
+.chartDates {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 5px;
+
+  color: #66686c;
+
+  font-size: 8px;
+}
+
+.chartEmpty {
+  height: 130px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #707276;
+
+  font-size: 10px;
+}
+
+/* COMPOSITION */
+
+.compositionGrid {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+.compositionCard {
+  padding: 20px;
+
+  border-radius: 13px;
+
+  background: #222327;
+
+  border: 1px solid #2d2e32;
+}
+
+.compositionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.compositionHeader > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.compositionHeader span {
+  color: #7f8185;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+.compositionHeader strong {
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 28px;
+
+  font-weight: 400;
+}
+
+.compositionHeader small {
+  color: #85878a;
+
+  font-family: Inter, sans-serif;
+
+  font-size: 8px;
+}
+
+.compositionGood,
+.compositionBad,
+.compositionNeutral {
+  padding: 5px 7px;
+
+  border-radius: 6px;
+
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.compositionGood {
+  background: rgba(143, 188, 63, 0.12);
+  color: #9dce51;
+}
+
+.compositionBad {
+  background: rgba(220, 120, 110, 0.12);
+  color: #d88981;
+}
+
+.compositionNeutral {
+  background: #303135;
+  color: #85878a;
+}
+
+.miniLabel {
+  margin-top: 4px;
+
+  color: #65676b;
+
+  font-size: 8px;
+}
+
+.miniChart {
+  width: 100%;
+  height: 70px;
+
+  margin-top: 8px;
+
+  overflow: visible;
+}
+
+.miniLine {
+  fill: none;
+
+  stroke: #8fbc3f;
+  stroke-width: 2.5;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.miniPoint {
+  fill: #222327;
+
+  stroke: #a3cf54;
+  stroke-width: 2;
+}
+
+.miniEmpty {
+  height: 70px;
+
+  display: flex;
+  align-items: end;
+
+  color: #65676b;
+
+  font-size: 9px;
+}
+
+/* FOOTER */
+
+.footer {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 17px;
+  padding-top: 17px;
+
+  border-top: 1px solid #2d2e32;
+}
+
+.footer div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer span {
+  color: #686a6e;
+
+  font-size: 7px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.footer strong {
+  font-size: 10px;
+}
+
+.footer button {
+  border: none;
+
+  background: transparent;
+
+  color: #8fbc3f;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* EMPTY */
+
+.emptySection {
+  margin-top: 20px;
+
+  min-height: 260px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 35px;
+
+  border-radius: 22px;
+
+  background: #16171a;
+
+  color: white;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.emptySection h2 {
+  margin: 8px 0;
+
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 40px;
+
+  font-weight: 400;
+}
+
+.emptySection p {
+  max-width: 470px;
+
+  color: #888a8e;
+
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  margin-top: 22px;
+
+  padding: 12px 15px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #8fbc3f;
+  color: #16171a;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.primaryButton span {
+  font-size: 16px;
+}
+
+.emptyVisual {
+  width: 210px;
+  height: 210px;
+
+  display: grid;
+  place-items: center;
+
+  margin-right: 50px;
+
+  border: 1px solid rgba(143, 188, 63, 0.25);
+
+  border-radius: 50%;
+}
+
+.emptyVisual div {
+  width: 110px;
+  height: 110px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(143, 188, 63, 0.35);
+
+  border-radius: 50%;
+
+  color: #8fbc3f;
+
+  font-family: "Bebas Neue", sans-serif;
+
+  font-size: 45px;
+}
+
+.loading {
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #888;
+
+  font-size: 11px;
+}
+
+@media (max-width: 900px) {
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .section,
+  .emptySection {
+    padding: 22px;
+
+    border-radius: 18px;
+  }
+
+  .heading {
+    display: block;
+  }
+
+  .viewButton {
+    margin-top: 15px;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .compositionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyVisual {
+    display: none;
+  }
+
+  .footer {
+    display: block;
+  }
+
+  .footer button {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
