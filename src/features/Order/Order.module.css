@@ -176,3 +176,22 @@ h1, h2, h3, p {
   min-width: 90px;
   text-align: right;
 }
+
+.formCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 30px;
+  max-width: 520px;
+  margin-top: 24px;
+}
+
+.formCard h3 {
+  font-family: 'Bebas Neue';
+  font-size: 30px;
+  margin: 0 0 5px;
+}
+
+.formCard p {
+  color: var(--muted);
+}
