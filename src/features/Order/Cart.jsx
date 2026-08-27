@@ -141,7 +141,7 @@ export default function Cart() {
                   <div className={styles.cartRowInfo}>
                     <h3>{product?.name || "Product unavailable"}</h3>
                     <p className={styles.unitPrice}>
-                      {(item.unit_price_cents / 100).toFixed(2)} USD each
+                      {(item.unit_price_cents / 100).toFixed(2)} EGP each
                     </p>
                   </div>
 
@@ -180,7 +180,7 @@ export default function Cart() {
           </div>
 
           <div className={styles.cartFooter}>
-            <p className={styles.total}>Total: {(totalCents / 100).toFixed(2)} USD</p>
+            <p className={styles.total}>Total: {(totalCents / 100).toFixed(2)} EGP</p>
             <button
               type="button"
               className={styles.primaryButton}

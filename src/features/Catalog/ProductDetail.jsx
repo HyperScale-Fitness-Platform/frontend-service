@@ -71,7 +71,7 @@ export default function ProductDetail() {
         <div className={styles.detailContent}>
           <p className={styles.eyebrow}>{product.category}</p>
           <h1>{product.name}</h1>
-          <p className={styles.priceLarge}>{(product.price_cents / 100).toFixed(2)} USD</p>
+          <p className={styles.priceLarge}>{(product.price_cents / 100).toFixed(2)} EGP</p>
           <p className={styles.stockLarge}>Available stock: {product.stock_qty}</p>
 
           <p className={styles.description}>{product.description || "No description provided."}</p>
