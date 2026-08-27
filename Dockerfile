@@ -8,6 +8,9 @@ COPY . .
 # Same-origin by default (shared ALB); override only for local/preview builds
 ARG VITE_API_GETWAY_URL
 ENV VITE_API_GETWAY_URL=$VITE_API_GETWAY_URL
+ARG VITE_STRIPE_PUBLISHABLE_KEY
+ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
+
 
 RUN npm run build
 
