@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { Elements } from "@stripe/react-stripe-js";
 
+import { stripePromise } from "../../utils/stripe";
+import CheckoutForm from "../Payment/CheckoutForm";
 import { getCart, updateCartItem, removeCartItem, checkout } from "./orderApi";
 import { getCatalogProductById } from "../Catalog/catalogApi";
 import styles from "./Order.module.css";
@@ -12,6 +15,8 @@ export default function Cart() {
   const [products, setProducts] = useState({});
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [pendingOrderId, setPendingOrderId] = useState(null);
 
   useEffect(() => {
     loadCart();
@@ -30,8 +35,6 @@ export default function Cart() {
             const product = await getCatalogProductById(item.product_id);
             return [item.product_id, product];
           } catch {
-            // Product may have been deleted since it was added to the cart;
-            // fall back to showing just the id rather than breaking the page.
             return [item.product_id, null];
           }
         }),
@@ -67,13 +70,32 @@ export default function Cart() {
     try {
       setCheckingOut(true);
       const order = await checkout();
-      toast.success("Order placed");
-      navigate(`/orders/${order.order_id}`);
+      // order-service now starts a payment intent as part of checkout —
+      // same shape as MembershipPlans/PTPackages: hold the clientSecret in
+      // state and render Stripe's CheckoutForm rather than navigating away
+      // immediately, since the order isn't paid yet at this point.
+      if (order.clientSecret) {
+        setPendingOrderId(order.order_id);
+        setClientSecret(order.clientSecret);
+      } else {
+        // Shouldn't normally happen — checkout only returns 201 once a
+        // payment intent was created — but fall back to the order page
+        // rather than getting stuck if it ever does.
+        navigate(`/orders/${order.order_id}`);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || "Checkout failed");
     } finally {
       setCheckingOut(false);
     }
+  }
+
+  function handlePaymentSuccess() {
+    setClientSecret(null);
+    toast.success("Payment succeeded! Order placed.");
+    const orderId = pendingOrderId;
+    setPendingOrderId(null);
+    navigate(`/orders/${orderId}`);
   }
 
   if (loading) {
@@ -119,7 +141,7 @@ export default function Cart() {
                   <div className={styles.cartRowInfo}>
                     <h3>{product?.name || "Product unavailable"}</h3>
                     <p className={styles.unitPrice}>
-                      {(item.unit_price_cents / 100).toFixed(2)} USD each
+                      {(item.unit_price_cents / 100).toFixed(2)} EGP each
                     </p>
                   </div>
 
@@ -158,16 +180,26 @@ export default function Cart() {
           </div>
 
           <div className={styles.cartFooter}>
-            <p className={styles.total}>Total: {(totalCents / 100).toFixed(2)} USD</p>
+            <p className={styles.total}>Total: {(totalCents / 100).toFixed(2)} EGP</p>
             <button
               type="button"
               className={styles.primaryButton}
               onClick={handleCheckout}
-              disabled={checkingOut}
+              disabled={checkingOut || Boolean(clientSecret)}
             >
               {checkingOut ? "Placing order..." : "Checkout"}
             </button>
           </div>
+
+          {clientSecret && (
+            <div className={styles.formCard}>
+              <h3>Complete your payment</h3>
+              <p>Enter your card details below to finish placing this order.</p>
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm clientSecret={clientSecret} onSuccess={handlePaymentSuccess} />
+              </Elements>
+            </div>
+          )}
         </>
       )}
     </div>

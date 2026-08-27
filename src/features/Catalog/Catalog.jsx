@@ -57,7 +57,7 @@ export default function Catalog() {
                   <div className={styles.productBody}>
                     <p className={styles.category}>{product.category}</p>
                     <h3>{product.name}</h3>
-                    <p className={styles.price}>{(product.price_cents / 100).toFixed(2)} USD</p>
+                    <p className={styles.price}>{(product.price_cents / 100).toFixed(2)} EGP</p>
                     <p className={styles.stock}>Stock: {product.stock_qty}</p>
                   </div>
                 </Link>

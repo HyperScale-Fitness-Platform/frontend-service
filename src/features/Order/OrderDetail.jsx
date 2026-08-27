@@ -64,7 +64,7 @@ export default function OrderDetail() {
             <div className={styles.cartRowInfo}>
               <h3>Product #{item.product_id.slice(0, 8)}</h3>
               <p className={styles.unitPrice}>
-                {(item.unit_price_cents / 100).toFixed(2)} USD each
+                {(item.unit_price_cents / 100).toFixed(2)} EGP each
               </p>
             </div>
             <p>Qty: {item.quantity}</p>
@@ -76,7 +76,7 @@ export default function OrderDetail() {
       </div>
 
       <div className={styles.cartFooter}>
-        <p className={styles.total}>Total: {(order.total_cents / 100).toFixed(2)} USD</p>
+        <p className={styles.total}>Total: {(order.total_cents / 100).toFixed(2)} EGP</p>
       </div>
     </div>
   );

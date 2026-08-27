@@ -52,7 +52,7 @@ export default function OrderHistory() {
                 </p>
               </div>
               <span className={styles.statusBadge}>{order.status.replace(/_/g, " ")}</span>
-              <p className={styles.orderTotal}>{(order.total_cents / 100).toFixed(2)} USD</p>
+              <p className={styles.orderTotal}>{(order.total_cents / 100).toFixed(2)} EGP</p>
             </Link>
           ))}
         </div>
