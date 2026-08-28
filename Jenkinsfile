@@ -28,11 +28,12 @@ pipeline {
         PATH          = "${WORKSPACE}/.tools/bin:${env.PATH}"
 
         // Vite bakes these in at build time (there is no runtime config for a
-        // static SPA). Empty gateway URL = same-origin: frontend and gateway
-        // are served from the same ALB/domain in the cluster. The Stripe
-        // publishable key is public by design (it ships in the browser
-        // bundle) -- swap for the live key / a parameter for prod.
-        VITE_API_GETWAY_URL         = ""
+        // static SPA). Gateway URL is left empty on purpose = same-origin:
+        // frontend and gateway are served from the same ALB/domain (the
+        // ingress routes /auth,/commerce,... to the gateway and / to the
+        // frontend). NOTE: do not put VITE_API_GETWAY_URL in this block as
+        // "" -- Jenkins drops empty env vars and "${env.X}" then renders the
+        // string "null". It is passed as a literal empty --build-arg below.
         VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_51U8mZ4IWbk32ohvY2Md6rNfsZEC8SHj7adQgmDFdC39ehDwkTP3T8gsA43gfRSxzRPH2UPdtEmBk9Ck1TtMIDqYU00DJ0zFcqT"
     }
 
@@ -91,7 +92,7 @@ pipeline {
                     IMAGE_URI="${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ECR_REPO_NAME}"
 
                     docker build \
-                      --build-arg VITE_API_GETWAY_URL="${env.VITE_API_GETWAY_URL}" \
+                      --build-arg VITE_API_GETWAY_URL= \
                       --build-arg VITE_STRIPE_PUBLISHABLE_KEY="${env.VITE_STRIPE_PUBLISHABLE_KEY}" \
                       -t "\${IMAGE_URI}:${env.IMAGE_TAG}" -t "\${IMAGE_URI}:latest" .
 
