@@ -1,7 +1,15 @@
 import { io } from "socket.io-client";
 import { getCurrentUser } from "../../utils/auth";
 
-const socket = io("http://localhost:4003", {
+// In production the frontend and the API gateway share the same origin
+// (the ALB), and the gateway proxies /socket.io -> social-service, so the
+// socket connects back to window.location.origin. VITE_SOCKET_URL overrides
+// this for local dev (e.g. http://localhost:4003).
+const SOCKET_URL =
+    import.meta.env.VITE_SOCKET_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "http://localhost:4003");
+
+const socket = io(SOCKET_URL, {
     autoConnect: false,
 });
 
